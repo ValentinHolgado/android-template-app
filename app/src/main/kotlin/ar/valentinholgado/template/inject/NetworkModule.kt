@@ -1,0 +1,87 @@
+package ar.valentinholgado.template.inject
+
+import ar.valentinholgado.template.backend.Repository
+import ar.valentinholgado.template.backend.StreamCache
+import ar.valentinholgado.template.backend.artsy.ArtsyApi
+import ar.valentinholgado.template.backend.artsy.ArtsyRepository
+import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import dagger.Module
+import dagger.Provides
+import okhttp3.Cache
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.jackson.JacksonConverterFactory
+import javax.inject.Named
+
+@Module
+class NetworkModule {
+
+    @Provides
+    @ApplicationScope
+    fun provideOkHttpClient(cache: Cache, @Named("api_token") apiToken: String): OkHttpClient {
+        return OkHttpClient.Builder()
+                .addNetworkInterceptor(StethoInterceptor())
+                .addNetworkInterceptor { chain: Interceptor.Chain? ->
+                    chain?.proceed(chain.request()
+                            .newBuilder()
+                            .addHeader("X-Xapp-Token", apiToken)
+                            .build())
+                }
+                .cache(cache)
+                .build()
+    }
+
+    @Provides
+    fun provideObjectMapper(): ObjectMapper {
+        return ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .registerKotlinModule()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideRetrofitBuilder(okHttpClient: OkHttpClient,
+                               objectMapper: ObjectMapper): Retrofit.Builder {
+        return Retrofit.Builder()
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(okHttpClient)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideRetrofit(builder: Retrofit.Builder,
+                        @Named("base_url") baseUrl: String): Retrofit {
+        return builder
+                .baseUrl(baseUrl)
+                .build()
+    }
+
+    @Provides
+    fun provideObservablesLruCache(): StreamCache {
+        return StreamCache()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideArtsyApi(retrofit: Retrofit): ArtsyApi {
+        return retrofit.create(ArtsyApi::class.java)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideArtsyRepository(artsyApi: ArtsyApi,
+                               cache: StreamCache): ArtsyRepository {
+        return ArtsyRepository(artsyApi, cache)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideRepository(artsyRepository: ArtsyRepository): Repository {
+        return Repository(artsyRepository = artsyRepository)
+    }
+}

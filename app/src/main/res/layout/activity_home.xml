@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="model" type="ar.valentinholgado.template.view.feed.HomeUiModel"/>
+        <import type="android.view.View"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".view.feed.FeedActivity">
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:queryHint="e.g. xul solar" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/home_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="48dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/search_view"
+            tools:layout_editor_absoluteX="0dp"
+            tools:listitem="@layout/viewholder_home" />
+
+        <ProgressBar
+            android:id="@+id/loading_spinner"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{model.isLoading ? View.VISIBLE : View.GONE}"
+            tools:layout_editor_absoluteX="167dp"
+            tools:layout_editor_absoluteY="263dp"
+            app:layout_constraintStart_toEndOf="@+id/home_list"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/home_list"
+            app:layout_constraintTop_toBottomOf="@+id/home_list"
+            app:layout_constraintBottom_toTopOf="@+id/home_list" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
+

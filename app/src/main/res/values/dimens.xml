@@ -1,0 +1,7 @@
+<resources>
+
+    <!-- ViewHolder -->
+    <dimen name="viewholder_title_text_size">18sp</dimen>
+    <dimen name="viewholder_subtitle_text_size">16sp</dimen>
+    <dimen name="default_padding">16dp</dimen>
+</resources>
