@@ -28,9 +28,7 @@ class DetailActivity : ReactiveActivity<DetailUiModel, DetailEvent>() {
     }
 
     override val successHandler = { model: DetailUiModel ->
-        Log.d("DetailActivity", model.toString())
         binding.model = model
-        binding.detailMainImage.setImageURI(model.content.imageUri)
     }
 
     private fun sendIntentParamsToOutput(intent: Intent, outputStream: Observer<DetailEvent>) {
