@@ -17,7 +17,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class FeedActivity : ReactiveActivity<HomeUiModel, Event>() {
+class FeedActivity : ReactiveActivity<FeedUiModel, Event>() {
     @Inject lateinit var presenter: HomePresenter
     @Inject lateinit var layoutManager: RecyclerView.LayoutManager
     @Inject lateinit var adapter: FeedAdapter
@@ -25,7 +25,7 @@ class FeedActivity : ReactiveActivity<HomeUiModel, Event>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_feed)
         binding.homeList.layoutManager = layoutManager
         binding.homeList.adapter = adapter
     }
@@ -61,7 +61,7 @@ class FeedActivity : ReactiveActivity<HomeUiModel, Event>() {
         }
     }
 
-    override val successHandler = { model: HomeUiModel ->
+    override val successHandler = { model: FeedUiModel ->
         model.contentList?.let {
             adapter.updateList(it)
         }

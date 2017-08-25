@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="ar.valentinholgado.template.view.feed.HomeUiModel"/>
+        <variable name="model" type="ar.valentinholgado.template.view.feed.FeedUiModel"/>
         <import type="android.view.View"/>
     </data>
 
@@ -30,7 +30,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/search_view"
             tools:layout_editor_absoluteX="0dp"
-            tools:listitem="@layout/viewholder_home" />
+            tools:listitem="@layout/viewholder_feed" />
 
         <ProgressBar
             android:id="@+id/loading_spinner"

@@ -6,7 +6,7 @@ import com.facebook.drawee.view.SimpleDraweeView
 /**
  * Home view state
  */
-data class HomeUiModel(val contentList: List<CardContent>? = null,
+data class FeedUiModel(val contentList: List<CardContent>? = null,
                        val errorMessage: String? = null,
                        val isLoading: Boolean = false)
 

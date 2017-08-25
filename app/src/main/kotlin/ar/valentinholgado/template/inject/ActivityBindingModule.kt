@@ -9,7 +9,7 @@ import ar.valentinholgado.template.view.detail.DetailEvent
 import ar.valentinholgado.template.view.detail.DetailUiModel
 import ar.valentinholgado.template.view.feed.FeedActivity
 import ar.valentinholgado.template.view.feed.FeedAdapter
-import ar.valentinholgado.template.view.feed.HomeUiModel
+import ar.valentinholgado.template.view.feed.FeedUiModel
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -21,12 +21,12 @@ abstract class ActivityBindingModule {
     /**
      * Provides an instance of {@link FeedActivity}
      */
-    @ContributesAndroidInjector(modules = arrayOf(HomeModule::class))
+    @ContributesAndroidInjector(modules = arrayOf(FeedModule::class))
     @ActivityScope
     abstract fun homeActivity(): FeedActivity
 
     @Binds
-    abstract fun homeView(feedActivity: FeedActivity): ReactiveView<HomeUiModel, Event>
+    abstract fun homeView(feedActivity: FeedActivity): ReactiveView<FeedUiModel, Event>
 
     /**
      * Provides an instance of {@link FeedActivity}
@@ -39,7 +39,7 @@ abstract class ActivityBindingModule {
 }
 
 @Module
-class HomeModule {
+class FeedModule {
 
     @Provides
     @ActivityScope

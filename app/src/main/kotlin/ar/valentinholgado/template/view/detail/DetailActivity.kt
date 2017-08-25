@@ -3,7 +3,6 @@ package ar.valentinholgado.template.view.detail
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.util.Log
 import ar.valentinholgado.template.R
 import ar.valentinholgado.template.databinding.ActivityDetailBinding
 import ar.valentinholgado.template.presenter.detail.DetailPresenter
@@ -32,9 +31,11 @@ class DetailActivity : ReactiveActivity<DetailUiModel, DetailEvent>() {
     }
 
     private fun sendIntentParamsToOutput(intent: Intent, outputStream: Observer<DetailEvent>) {
+        // TODO Put in ReactiveActivity.
         intent.data?.let {
-            outputStream.onNext(DetailEvent(id = it.getQueryParameter("id"),
-                    type = it.getQueryParameter("type")))
+            outputStream.onNext(DetailEvent(
+                                        id = it.getQueryParameter("id"),
+                                        type = it.getQueryParameter("type")))
         }
     }
 }

@@ -6,6 +6,10 @@ import io.reactivex.Observer
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 
+/**
+ * Facade for different services with the same interface:
+ * An input stream of Actions and an output stream of Results.
+ */
 class Repository(private val inputStream: Subject<Action> = BehaviorSubject.create(),
                  private val outputStream: Subject<Result> = BehaviorSubject.create(),
                  val artsyRepository: ArtsyRepository) {

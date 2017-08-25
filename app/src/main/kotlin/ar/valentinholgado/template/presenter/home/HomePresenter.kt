@@ -3,7 +3,6 @@ package ar.valentinholgado.template.presenter.home
 import android.net.Uri
 import ar.valentinholgado.template.backend.Repository
 import ar.valentinholgado.template.backend.Result
-import ar.valentinholgado.template.backend.artsy.*
 import ar.valentinholgado.template.backend.artsy.artwork.Artwork
 import ar.valentinholgado.template.backend.artsy.artwork.ArtworkAction
 import ar.valentinholgado.template.backend.artsy.artwork.ArtworkResult
@@ -13,24 +12,24 @@ import ar.valentinholgado.template.backend.artsy.search.SearchResult
 import ar.valentinholgado.template.view.Event
 import ar.valentinholgado.template.view.ReactiveView
 import ar.valentinholgado.template.view.feed.CardContent
-import ar.valentinholgado.template.view.feed.HomeUiModel
+import ar.valentinholgado.template.view.feed.FeedUiModel
 import ar.valentinholgado.template.view.feed.SearchEvent
 import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
-class HomePresenter @Inject constructor(homeView: ReactiveView<HomeUiModel, Event>,
+class HomePresenter @Inject constructor(feedView: ReactiveView<FeedUiModel, Event>,
                                         repository: Repository) {
 
     init {
-        homeView.outputStream()
+        feedView.outputStream()
                 .compose(eventsToActions)
                 .subscribe(repository.inputStream())
 
         repository.outputStream()
                 .doOnEach { result -> Timber.i("Result: %s", result) }
-                .scan(HomeUiModel(), accumulator)
-                .subscribe(homeView.inputStream())
+                .scan(FeedUiModel(), accumulator)
+                .subscribe(feedView.inputStream())
     }
 
     companion object {
@@ -46,7 +45,7 @@ class HomePresenter @Inject constructor(homeView: ReactiveView<HomeUiModel, Even
         }
 
         // Results to HomeUIModel
-        val accumulator = { state: HomeUiModel, result: Result ->
+        val accumulator = { state: FeedUiModel, result: Result ->
             when (result.status) {
                 Result.Status.SUCCESS -> state.copy(contentList = unwrap(result),
                         isLoading = false)
