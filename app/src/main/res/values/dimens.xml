@@ -1,7 +1,15 @@
 <resources>
 
-    <!-- ViewHolder -->
-    <dimen name="viewholder_title_text_size">18sp</dimen>
-    <dimen name="viewholder_subtitle_text_size">16sp</dimen>
+    <!-- Application wide settings-->
     <dimen name="default_padding">16dp</dimen>
+    <dimen name="h1_text_size">36sp</dimen>
+    <dimen name="h2_text_size">24sp</dimen>
+    <dimen name="h3_text_size">18sp</dimen>
+    <dimen name="body_text_size">16sp</dimen>
+
+    <!-- ViewHolder -->
+    <dimen name="viewholder_title_text_size">@dimen/h2_text_size</dimen>
+    <dimen name="viewholder_subtitle_text_size">@dimen/body_text_size</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+
 </resources>

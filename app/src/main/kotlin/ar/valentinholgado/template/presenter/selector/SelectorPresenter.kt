@@ -12,21 +12,21 @@ import javax.inject.Inject
 class SelectorPresenter @Inject constructor(selectorView: ReactiveView<FeedUiModel, Event>) {
 
     init {
-
-        val contentList = listOf(
-                CardContent(
-                        title = "Feed",
-                        subtitle = "A text input and a list",
-                        intentUri = "app://feed"
-                ),
-                CardContent(
-                        title = "Detail",
-                        subtitle = "A detail screen with a big image",
-                        intentUri = "app://detail"
-                )
-        )
-
-        val uiModel = FeedUiModel(contentList = contentList)
+        val uiModel = FeedUiModel(
+                screenTitle = "Activity selector",
+                showInputText = false,
+                contentList = listOf(
+                        CardContent(
+                                title = "Feed",
+                                subtitle = "A text input and a list",
+                                intentUri = "app://feed"
+                        ),
+                        CardContent(
+                                title = "Detail",
+                                subtitle = "A detail screen with a big image",
+                                intentUri = "app://mockdetail"
+                        )
+                ))
 
         selectorView.inputStream().onNext(uiModel)
     }

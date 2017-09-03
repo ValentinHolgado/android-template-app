@@ -14,7 +14,7 @@ import io.reactivex.Observable
 import timber.log.Timber
 import javax.inject.Inject
 
-class DetailPresenter @Inject constructor(detailView: ReactiveView<DetailUiModel, DetailEvent>,
+class DetailPresenter constructor(detailView: ReactiveView<DetailUiModel, DetailEvent>,
                                           repository: Repository) {
 
     init {

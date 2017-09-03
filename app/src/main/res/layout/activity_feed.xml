@@ -4,47 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable name="model" type="ar.valentinholgado.template.view.feed.FeedUiModel"/>
-        <import type="android.view.View"/>
+
+        <variable
+            name="model"
+            type="ar.valentinholgado.template.view.feed.FeedUiModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/container"
+        android:id="@+id/feed_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".view.feed.FeedActivity">
 
-        <android.support.v7.widget.SearchView
-            android:id="@+id/search_view"
+        <TextView
+            android:id="@+id/feed_title_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_padding"
+            android:text="@{model.screenTitle}"
+            android:textAlignment="center"
+            android:textSize="@dimen/h1_text_size"
+            android:visibility="@{model.screenTitle.isEmpty() ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="A label for this screen" />
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/feed_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{model.showInputText ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toBottomOf="@+id/feed_title_label"
             app:queryHint="e.g. xul solar" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/home_list"
+            android:id="@+id/feed_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="48dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/search_view"
-            tools:layout_editor_absoluteX="0dp"
+            app:layout_constraintStart_toEndOf="@+id/feed_search_view"
+            app:layout_constraintTop_toBottomOf="@+id/feed_search_view"
             tools:listitem="@layout/viewholder_feed" />
 
         <ProgressBar
-            android:id="@+id/loading_spinner"
+            android:id="@+id/feed_loading_spinner"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{model.isLoading ? View.VISIBLE : View.GONE}"
-            tools:layout_editor_absoluteX="167dp"
-            tools:layout_editor_absoluteY="263dp"
-            app:layout_constraintStart_toEndOf="@+id/home_list"
+            app:layout_constraintBottom_toTopOf="@+id/feed_list"
+            app:layout_constraintEnd_toStartOf="@+id/feed_list"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintEnd_toStartOf="@+id/home_list"
-            app:layout_constraintTop_toBottomOf="@+id/home_list"
-            app:layout_constraintBottom_toTopOf="@+id/home_list" />
+            app:layout_constraintStart_toEndOf="@+id/feed_list"
+            app:layout_constraintTop_toBottomOf="@+id/feed_list" />
     </android.support.constraint.ConstraintLayout>
 </layout>
 

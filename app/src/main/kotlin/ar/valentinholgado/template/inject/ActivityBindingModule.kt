@@ -3,7 +3,9 @@ package ar.valentinholgado.template.inject
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import ar.valentinholgado.template.backend.Repository
+import ar.valentinholgado.template.presenter.detail.DetailPresenter
 import ar.valentinholgado.template.presenter.home.HomePresenter
+import ar.valentinholgado.template.presenter.mockdetail.MockDetailPresenter
 import ar.valentinholgado.template.presenter.selector.SelectorPresenter
 import ar.valentinholgado.template.view.Event
 import ar.valentinholgado.template.view.ReactiveView
@@ -33,9 +35,10 @@ abstract class ActivityBindingModule {
     abstract fun homeView(feedActivity: FeedActivity): ReactiveView<FeedUiModel, Event>
 
     /**
-     * Provides an instance of {@link FeedActivity}
+     * Provides an instance of {@link DetailActivity}
      */
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = arrayOf(DetailModule::class))
+    @ActivityScope
     abstract fun detailActivity(): DetailActivity
 
     @Binds
@@ -55,16 +58,29 @@ class FeedModule {
     @ActivityScope
     @Named("presenter")
     fun presenter(feedActivity: FeedActivity, repository: Repository): Any {
-        when(feedActivity.intent?.data?.host) {
-            "feed" -> return HomePresenter(feedActivity, repository)
+        return when (feedActivity.intent?.data?.host) {
+            "feed" -> HomePresenter(feedActivity, repository)
+            else -> SelectorPresenter(feedActivity)
         }
-
-        return SelectorPresenter(feedActivity)
     }
 
     @Provides
     @ActivityScope
     fun adapter(): FeedAdapter {
         return FeedAdapter()
+    }
+}
+
+@Module
+class DetailModule {
+
+    @Provides
+    @ActivityScope
+    @Named("presenter")
+    fun presenter(detailActivity: DetailActivity, repository: Repository): Any {
+        return when (detailActivity.intent?.data?.host) {
+            "mockdetail" -> MockDetailPresenter(detailActivity)
+            else -> DetailPresenter(detailActivity, repository)
+        }
     }
 }

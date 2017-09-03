@@ -5,14 +5,10 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import ar.valentinholgado.template.R
 import ar.valentinholgado.template.databinding.ActivityDetailBinding
-import ar.valentinholgado.template.presenter.detail.DetailPresenter
-import ar.valentinholgado.template.view.*
+import ar.valentinholgado.template.view.ReactiveActivity
 import io.reactivex.Observer
-import javax.inject.Inject
 
 class DetailActivity : ReactiveActivity<DetailUiModel, DetailEvent>() {
-
-    @Inject lateinit var detailPresenter: DetailPresenter
 
     private lateinit var binding: ActivityDetailBinding
 
@@ -33,9 +29,15 @@ class DetailActivity : ReactiveActivity<DetailUiModel, DetailEvent>() {
     private fun sendIntentParamsToOutput(intent: Intent, outputStream: Observer<DetailEvent>) {
         // TODO Put in ReactiveActivity.
         intent.data?.let {
+            val queryId = it.getQueryParameter("id")
+            val queryType = it.getQueryParameter("type")
+
+            if (queryId == null || queryType == null)
+                return
+
             outputStream.onNext(DetailEvent(
-                                        id = it.getQueryParameter("id"),
-                                        type = it.getQueryParameter("type")))
+                                        id = queryId,
+                                        type = queryType))
         }
     }
 }
