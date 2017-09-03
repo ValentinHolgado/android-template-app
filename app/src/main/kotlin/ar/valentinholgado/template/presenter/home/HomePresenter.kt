@@ -16,9 +16,8 @@ import ar.valentinholgado.template.view.feed.FeedUiModel
 import ar.valentinholgado.template.view.feed.SearchEvent
 import io.reactivex.Observable
 import timber.log.Timber
-import javax.inject.Inject
 
-class HomePresenter @Inject constructor(feedView: ReactiveView<FeedUiModel, Event>,
+class HomePresenter constructor(feedView: ReactiveView<FeedUiModel, Event>,
                                         repository: Repository) {
 
     init {
@@ -38,7 +37,7 @@ class HomePresenter @Inject constructor(feedView: ReactiveView<FeedUiModel, Even
             events.flatMap { event: Event ->
                 when (event) {
                     is SearchEvent -> Observable.just(SearchAction(event.query))
-                    // TODO: Define default behavior
+                // TODO: Define default behavior
                     else -> Observable.just(ArtworkAction())
                 }
             }
@@ -57,8 +56,8 @@ class HomePresenter @Inject constructor(feedView: ReactiveView<FeedUiModel, Even
 
         private fun unwrap(result: Result): List<CardContent>? {
             return when (result) {
-                is SearchResult -> result.body?.mapNotNull(entryToCardContent)
-                is ArtworkResult -> result.body?.mapNotNull(artworkToCardContent)
+                is SearchResult -> result.body?.map(entryToCardContent)
+                is ArtworkResult -> result.body?.map(artworkToCardContent)
                 else -> ArrayList()
             }
         }

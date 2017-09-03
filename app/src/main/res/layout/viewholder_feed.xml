@@ -11,6 +11,7 @@
         <variable
             name="eventHandler"
             type="ar.valentinholgado.template.view.common.CardEventHandler" />
+        <import type="android.view.View"/>
     </data>
 
     <RelativeLayout
@@ -28,6 +29,7 @@
             android:id="@+id/mainImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:visibility="@{viewHolderModel.imageUri.isEmpty() ? View.GONE : View.VISIBLE}"
             fresco:actualImageScaleType="fitCenter"
             app:imageUrl="@{viewHolderModel.imageUri}" />
 

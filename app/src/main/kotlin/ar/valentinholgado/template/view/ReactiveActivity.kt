@@ -56,7 +56,7 @@ abstract class ReactiveActivity<M, E> : DaggerAppCompatActivity(), ReactiveView<
     }
 
     /**
-     * Dispose all listening subscribers from the stream.
+     * Dispose all subscribers
      */
     fun dispose() {
         disposables.forEach { disposable -> if (!disposable.isDisposed) disposable.dispose() }

@@ -12,7 +12,7 @@ data class FeedUiModel(val contentList: List<CardContent>? = null,
 
 data class CardContent(val title: String,
                        val subtitle: String? = "",
-                       val imageUri: String?,
+                       val imageUri: String? = "",
                        val intentUri: String? = null) {
 
     companion object {
