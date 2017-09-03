@@ -18,14 +18,14 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @RunWith(JUnitPlatform::class)
-class SomeSpec : Spek({
+class HomePresenterSpec : Spek({
     describe("a home presenter accumulator") {
         val accumulator = HomePresenter.accumulator
 
         on("a successful result") {
             val model = accumulator.invoke(FeedUiModel(), SearchResult(status = Result.Status.SUCCESS))
 
-            it("should  not be loading") {
+            it("should not be loading") {
                 assertFalse { model.isLoading }
             }
         }

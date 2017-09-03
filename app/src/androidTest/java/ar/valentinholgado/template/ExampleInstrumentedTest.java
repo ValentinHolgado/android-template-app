@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("ar.valentinh.openlibrary", appContext.getPackageName());
+        assertEquals("ar.valentinholgado.template", appContext.getPackageName());
     }
 }
