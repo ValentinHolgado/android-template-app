@@ -24,7 +24,7 @@ android {
         buildConfigField 'String', 'API_URL', '"https://api.artsy.net/api/"'
         buildConfigField ('String', 'API_KEY', System.getenv("ARTSY_API_KEY")
                 ? "\"${System.getenv("ARTSY_API_KEY")}\""
-                : '"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6IiIsImV4cCI6MTUwNTAwODQwNywiaWF0IjoxNTA0NDAzNjA3LCJhdWQiOiI1OTM5ZWE3MjhiM2I4MTdkN2I2MTlmYWEiLCJpc3MiOiJHcmF2aXR5IiwianRpIjoiNTlhYjYwOTc3NjIyZGQ0ZDdkMjA1Yjg1In0.o3j4sC2UQWyk10H0PckJ5hGZkj3wpM54fS1vYOlbSno"')
+                : '"YOUR_API_KEY"')
     }
 
     buildTypes {
