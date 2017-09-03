@@ -16,7 +16,7 @@ class SelectorPresenter @Inject constructor(selectorView: ReactiveView<FeedUiMod
         val contentList = listOf(
                 CardContent(
                         title = "Feed",
-                        subtitle = "A list and a search box on top",
+                        subtitle = "A text input and a list",
                         intentUri = "app://feed"
                 ),
                 CardContent(
