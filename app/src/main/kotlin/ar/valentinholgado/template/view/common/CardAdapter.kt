@@ -11,7 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
 abstract class CardAdapter<T>(
-        var list: List<T> = ArrayList<T>(),
+        var list: List<T> = ArrayList(),
         val eventStream: Subject<CardEvent<T>> = PublishSubject.create())
     : RecyclerView.Adapter<CardViewHolder<T>>() {
 

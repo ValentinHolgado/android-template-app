@@ -6,7 +6,7 @@ import ar.valentinholgado.template.backend.Result
 import ar.valentinholgado.template.backend.artsy.search.Entry
 import ar.valentinholgado.template.backend.artsy.search.SearchResult
 import ar.valentinholgado.template.presenter.home.HomePresenter
-import ar.valentinholgado.template.view.feed.HomeUiModel
+import ar.valentinholgado.template.view.feed.FeedUiModel
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -23,7 +23,7 @@ class SomeSpec : Spek({
         val accumulator = HomePresenter.accumulator
 
         on("a successful result") {
-            val model = accumulator.invoke(HomeUiModel(), SearchResult(status = Result.Status.SUCCESS))
+            val model = accumulator.invoke(FeedUiModel(), SearchResult(status = Result.Status.SUCCESS))
 
             it("should  not be loading") {
                 assertFalse { model.isLoading }
@@ -31,7 +31,7 @@ class SomeSpec : Spek({
         }
 
         on("an error result") {
-            val model = accumulator.invoke(HomeUiModel(), SearchResult(status = Result.Status.ERROR))
+            val model = accumulator.invoke(FeedUiModel(), SearchResult(status = Result.Status.ERROR))
 
             it("should not be loading") {
                 assertFalse { model.isLoading }
@@ -39,7 +39,7 @@ class SomeSpec : Spek({
         }
 
         on("an in flight result") {
-            val model = accumulator.invoke(HomeUiModel(), SearchResult(status = Result.Status.IN_FLIGHT))
+            val model = accumulator.invoke(FeedUiModel(), SearchResult(status = Result.Status.IN_FLIGHT))
 
             it("should be loading") {
                 assertTrue { model.isLoading }
@@ -61,7 +61,7 @@ class SomeSpec : Spek({
                                     templated = false)),
                     description = "Some description"))
 
-            val model = accumulator.invoke(HomeUiModel(), SearchResult(status = Result.Status.SUCCESS,
+            val model = accumulator.invoke(FeedUiModel(), SearchResult(status = Result.Status.SUCCESS,
                     body = list))
 
             it("should return model with result's content") {

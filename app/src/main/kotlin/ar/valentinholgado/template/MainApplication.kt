@@ -28,5 +28,8 @@ class MainApplication : DaggerApplication() {
 
         // Initialize Timber
         Timber.plant(Timber.DebugTree())
+
+        // Initialize ReactiveSystems
+        ReactiveSystems.initialize(this)
     }
 }

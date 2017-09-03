@@ -7,25 +7,30 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import ar.valentinholgado.template.R
-import ar.valentinholgado.template.databinding.ActivityHomeBinding
-import ar.valentinholgado.template.presenter.home.HomePresenter
+import ar.valentinholgado.template.databinding.ActivityFeedBinding
 import ar.valentinholgado.template.view.Event
 import ar.valentinholgado.template.view.ReactiveActivity
-import com.jakewharton.rxbinding2.support.v7.widget.*
+import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
+import com.jakewharton.rxbinding2.support.v7.widget.scrollEvents
 import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 
-class FeedActivity : ReactiveActivity<HomeUiModel, Event>() {
-    @Inject lateinit var presenter: HomePresenter
+class FeedActivity : ReactiveActivity<FeedUiModel, Event>() {
+
+    @Inject
+    @field:[Named("presenter")]
+    lateinit var presenter: Any
+
     @Inject lateinit var layoutManager: RecyclerView.LayoutManager
     @Inject lateinit var adapter: FeedAdapter
-    private lateinit var binding: ActivityHomeBinding
+    private lateinit var binding: ActivityFeedBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_feed)
         binding.homeList.layoutManager = layoutManager
         binding.homeList.adapter = adapter
     }
@@ -36,6 +41,7 @@ class FeedActivity : ReactiveActivity<HomeUiModel, Event>() {
     }
 
     private fun connectOutput() {
+
         binding.searchView.queryTextChanges()
                 .filter { query -> !query.isNullOrEmpty() }
                 .map { query -> SearchEvent(query = query.toString()) }
@@ -61,7 +67,7 @@ class FeedActivity : ReactiveActivity<HomeUiModel, Event>() {
         }
     }
 
-    override val successHandler = { model: HomeUiModel ->
+    override val successHandler = { model: FeedUiModel ->
         model.contentList?.let {
             adapter.updateList(it)
         }
@@ -73,7 +79,7 @@ class FeedActivity : ReactiveActivity<HomeUiModel, Event>() {
         binding.model = model
     }
 
-    override val errorHandler = { error: Throwable ->
+    override val errorHandler = { _: Throwable ->
         Snackbar.make(binding.container, "An unexpected error occurred", Snackbar.LENGTH_LONG).show()
     }
 }
