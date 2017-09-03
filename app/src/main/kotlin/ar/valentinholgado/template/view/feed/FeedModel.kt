@@ -20,7 +20,7 @@ data class CardContent(val title: String,
     companion object {
 
         @JvmStatic
-        @BindingAdapter("app:imageUrl")
+        @BindingAdapter("imageUrl")
         fun loadImage(view: SimpleDraweeView, imageUrl: String?) {
             view.setImageURI(imageUrl)
         }
