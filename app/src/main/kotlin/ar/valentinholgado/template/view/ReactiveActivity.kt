@@ -6,11 +6,17 @@ import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import javax.inject.Inject
+import javax.inject.Named
 
 abstract class ReactiveActivity<M, E> : DaggerAppCompatActivity(), ReactiveView<M, E> {
     protected val outputStream: Subject<E> = BehaviorSubject.create()
     protected var inputStream: Subject<M> = BehaviorSubject.create()
     protected var disposables = ArrayList<Disposable>()
+
+    @Inject
+    @field:[Named("presenter")]
+    lateinit var presenter: Any
 
     abstract val successHandler: (M) -> Unit
 

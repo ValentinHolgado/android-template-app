@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewHolderModel"
             type="ar.valentinholgado.template.view.feed.CardContent" />
+
         <variable
             name="eventHandler"
             type="ar.valentinholgado.template.view.common.CardEventHandler" />
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
     </data>
 
     <RelativeLayout
@@ -19,28 +22,28 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:paddingBottom="@dimen/default_padding"
         android:background="#FFF"
-        android:elevation="4dp"
+        android:elevation="@dimen/card_elevation"
+        android:onClick="@{() -> eventHandler.onItemClick(viewHolderModel)}"
         android:orientation="vertical"
-        android:onClick="@{() -> eventHandler.onItemClick(viewHolderModel)}">
+        android:paddingBottom="@dimen/default_padding">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/mainImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:visibility="@{viewHolderModel.imageUri.isEmpty() ? View.GONE : View.VISIBLE}"
-            fresco:actualImageScaleType="fitCenter"
-            app:imageUrl="@{viewHolderModel.imageUri}" />
+            app:imageUrl="@{viewHolderModel.imageUri}"
+            fresco:actualImageScaleType="fitCenter" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/mainImage"
             android:layout_marginEnd="@dimen/default_padding"
             android:layout_marginStart="@dimen/default_padding"
             android:layout_marginTop="@dimen/default_padding"
-            android:layout_below="@id/mainImage"
             android:text="@{viewHolderModel.title}"
             android:textSize="@dimen/viewholder_title_text_size"
             tools:text="Some texty" />
@@ -49,9 +52,9 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/textView"
             android:layout_marginEnd="@dimen/default_padding"
             android:layout_marginStart="@dimen/default_padding"
-            android:layout_below="@id/textView"
             android:text="@{viewHolderModel.subtitle}"
             android:textSize="@dimen/viewholder_subtitle_text_size"
             tools:text="Subtext" />

@@ -28,7 +28,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:imageUrl="@{model.content.imageUri}"
+                android:visibility="@{model.content.imageUri.isEmpty() ? View.GONE : View.VISIBLE}"
                 android:transitionName="imageTransition"
+                tools:visibility="gone"
                 tools:background="@android:color/darker_gray" />
 
             <TextView

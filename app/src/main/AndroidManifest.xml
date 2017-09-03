@@ -31,12 +31,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="view.detail.DetailActivity">
+        <activity android:name=".view.detail.DetailActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data
                     android:host="detail"
+                    android:scheme="app" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="mockdetail"
                     android:scheme="app" />
             </intent-filter>
         </activity>

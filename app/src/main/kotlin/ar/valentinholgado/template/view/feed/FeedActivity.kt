@@ -16,13 +16,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 class FeedActivity : ReactiveActivity<FeedUiModel, Event>() {
-
-    @Inject
-    @field:[Named("presenter")]
-    lateinit var presenter: Any
 
     @Inject lateinit var layoutManager: RecyclerView.LayoutManager
     @Inject lateinit var adapter: FeedAdapter
@@ -31,8 +26,8 @@ class FeedActivity : ReactiveActivity<FeedUiModel, Event>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_feed)
-        binding.homeList.layoutManager = layoutManager
-        binding.homeList.adapter = adapter
+        binding.feedList.layoutManager = layoutManager
+        binding.feedList.adapter = adapter
     }
 
     override fun onStart() {
@@ -42,15 +37,15 @@ class FeedActivity : ReactiveActivity<FeedUiModel, Event>() {
 
     private fun connectOutput() {
 
-        binding.searchView.queryTextChanges()
+        binding.feedSearchView.queryTextChanges()
                 .filter { query -> !query.isNullOrEmpty() }
                 .map { query -> SearchEvent(query = query.toString()) }
                 .debounce(400, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
                 .subscribe(outputStream)
 
-        binding.homeList.scrollEvents()
+        binding.feedList.scrollEvents()
                 .filter { event -> !event.view().canScrollVertically(1) }
-                .map { _ -> SearchEvent(query = binding.searchView.query.toString()) }
+                .map { _ -> SearchEvent(query = binding.feedSearchView.query.toString()) }
                 .subscribe(outputStream)
 
         disposables.add(
@@ -73,13 +68,13 @@ class FeedActivity : ReactiveActivity<FeedUiModel, Event>() {
         }
 
         model.errorMessage?.let {
-            Snackbar.make(binding.container, it, Snackbar.LENGTH_LONG).show()
+            Snackbar.make(binding.feedContainer, it, Snackbar.LENGTH_LONG).show()
         }
 
         binding.model = model
     }
 
     override val errorHandler = { _: Throwable ->
-        Snackbar.make(binding.container, "An unexpected error occurred", Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.feedContainer, "An unexpected error occurred", Snackbar.LENGTH_LONG).show()
     }
 }
