@@ -153,4 +153,4 @@ dependencies {
     })
 }
 
-build.dependsOn unMock
+build.dependsOn tasks.getByName("unMock")
