@@ -5,9 +5,8 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import ar.valentinholgado.template.R
 import ar.valentinholgado.template.databinding.ActivityAudioBinding
-import ar.valentinholgado.template.databinding.ActivityDetailBinding
 import ar.valentinholgado.template.view.ReactiveActivity
-import ar.valentinholgado.template.view.detail.DetailUiModel
+import com.jakewharton.rxbinding2.view.clicks
 import io.reactivex.Observer
 
 class AudioActivity : ReactiveActivity<AudioUiModel, AudioEvent>() {
@@ -21,25 +20,16 @@ class AudioActivity : ReactiveActivity<AudioUiModel, AudioEvent>() {
 
     override fun onStart() {
         super.onStart()
-        sendIntentParamsToOutput(intent, outputStream)
+        connectOutput()
+    }
+
+    private fun connectOutput() {
+        binding.transportPlayPause.clicks()
+                .map { _ -> TransportEvent("TRANSPORT_PLAY_PAUSE")}
+                .subscribe(outputStream)
     }
 
     override val successHandler = { model: AudioUiModel ->
         binding.model = model
-    }
-
-    private fun sendIntentParamsToOutput(intent: Intent, outputStream: Observer<AudioEvent>) {
-        // TODO Put in ReactiveActivity.
-        intent.data?.let {
-            val queryId = it.getQueryParameter("id")
-            val queryType = it.getQueryParameter("type")
-
-            if (queryId == null || queryType == null)
-                return
-
-            outputStream.onNext(AudioEvent(
-                    id = queryId,
-                    type = queryType))
-        }
     }
 }

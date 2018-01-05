@@ -10,6 +10,7 @@ import ar.valentinholgado.template.view.ReactiveView
 import ar.valentinholgado.template.view.audio.AudioContent
 import ar.valentinholgado.template.view.audio.AudioEvent
 import ar.valentinholgado.template.view.audio.AudioUiModel
+import ar.valentinholgado.template.view.audio.TransportEvent
 import io.reactivex.Observable
 import timber.log.Timber
 
@@ -29,11 +30,10 @@ class AudioPresenter constructor(audioView: ReactiveView<AudioUiModel, AudioEven
     companion object {
         // Event to action mapping
         val eventsToActions = { events: Observable<AudioEvent> ->
-            events.flatMap { (id, type) ->
-                when (type) {
-                    "artist" -> Observable.just(ArtistAction(id = id))
-                    "show" -> Observable.just(ShowAction(id = id))
-                    else -> TODO("Can't handle $type type")
+            events.flatMap { event ->
+                when(event) {
+                    is TransportEvent -> Observable.just(ArtistAction(""))
+                    else -> TODO("Can't handle ${event::class.simpleName}")
                 }
             }
         }
