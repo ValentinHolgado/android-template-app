@@ -48,6 +48,15 @@
                     android:scheme="app" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.audio.AudioActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="audio"
+                    android:scheme="app" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
