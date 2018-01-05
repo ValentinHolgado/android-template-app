@@ -6,7 +6,6 @@ apply plugin: 'de.mobilej.unmock'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "ar.valentinh.openlibrary"
         minSdkVersion 16
