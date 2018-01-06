@@ -21,11 +21,11 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                 is PlayAction ->
                     if (rxAudioPlayer.progress() > 0) {
                         rxAudioPlayer.resume()
-                        Observable.just(AudioResult(Result.Status.SUCCESS))
+                        Observable.just(AudioResult(Result.Status.RESUMING))
                                 .mergeWith(ticks())
                     } else {
                         rxAudioPlayer.play(PlayConfig.url(action.filename).build())
-                                .map { prepared ->
+                                .map { _ ->
                                     AudioResult(Result.Status.SUCCESS, title = action.filename)
                                 }
                                 .mergeWith(ticks())
@@ -50,7 +50,7 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
         }.subscribe(outputStream)
     }
 
-    private fun ticks(): Observable<AudioResult>? {
+    private fun ticks(): Observable<AudioResult> {
         return Observable.interval(16, TimeUnit.MILLISECONDS)
                 .map { _ -> AudioResult(Result.Status.PLAYING, progress = rxAudioPlayer.progress()) }
                 .takeWhile { _ ->

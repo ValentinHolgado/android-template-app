@@ -18,6 +18,7 @@ abstract class Result {
         ON_PAUSE,
         FINISHED,
         STOPPED,
-        PLAYING
+        PLAYING,
+        RESUMING
     }
 }
