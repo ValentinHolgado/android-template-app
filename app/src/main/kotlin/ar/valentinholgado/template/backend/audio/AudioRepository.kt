@@ -8,7 +8,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import timber.log.Timber
+import java.util.concurrent.TimeUnit
+
 
 class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(),
                       val outputStream: Subject<Result> = BehaviorSubject.create(),
@@ -21,11 +22,13 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                     if (rxAudioPlayer.progress() > 0) {
                         rxAudioPlayer.resume()
                         Observable.just(AudioResult(Result.Status.SUCCESS))
+                                .mergeWith(ticks())
                     } else {
                         rxAudioPlayer.play(PlayConfig.url(action.filename).build())
                                 .map { prepared ->
                                     AudioResult(Result.Status.SUCCESS, title = action.filename)
                                 }
+                                .mergeWith(ticks())
                                 .onErrorReturn { error ->
                                     AudioResult(errorMessage = error.message,
                                             status = Result.Status.ERROR)
@@ -45,5 +48,14 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                 else -> TODO()
             }
         }.subscribe(outputStream)
+    }
+
+    private fun ticks(): Observable<AudioResult>? {
+        return Observable.interval(16, TimeUnit.MILLISECONDS)
+                .map { _ -> AudioResult(Result.Status.PLAYING, progress = rxAudioPlayer.progress()) }
+                .takeWhile { _ ->
+                    rxAudioPlayer.mediaPlayer != null
+                            && rxAudioPlayer.mediaPlayer.isPlaying
+                }
     }
 }

@@ -17,6 +17,7 @@ abstract class Result {
         ERROR,
         ON_PAUSE,
         FINISHED,
-        STOPPED
+        STOPPED,
+        PLAYING
     }
 }

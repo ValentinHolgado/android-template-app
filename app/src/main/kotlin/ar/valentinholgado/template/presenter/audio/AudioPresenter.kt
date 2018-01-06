@@ -1,6 +1,5 @@
 package ar.valentinholgado.template.presenter.audio
 
-import ar.valentinholgado.template.backend.Repository
 import ar.valentinholgado.template.backend.Result
 import ar.valentinholgado.template.backend.audio.AudioRepository
 import ar.valentinholgado.template.backend.audio.AudioResult
@@ -61,6 +60,7 @@ class AudioPresenter constructor(audioView: ReactiveView<AudioUiModel, AudioEven
                                 content = AudioContent(
                                         audioId = "mocked id",
                                         title = result.title ?: "No name found"))
+                        Result.Status.PLAYING -> state
                         Result.Status.ON_PAUSE -> state.copy(isPlaying = false)
                         Result.Status.FINISHED -> state.copy(isPlaying = false)
                         Result.Status.STOPPED -> state.copy(isPlaying = false)
