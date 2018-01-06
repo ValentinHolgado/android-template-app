@@ -24,7 +24,7 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                     } else {
                         rxAudioPlayer.play(PlayConfig.url(action.filename).build())
                                 .map { prepared ->
-                                    AudioResult(Result.Status.SUCCESS)
+                                    AudioResult(Result.Status.SUCCESS, title = action.filename)
                                 }
                                 .onErrorReturn { error ->
                                     AudioResult(errorMessage = error.message,
@@ -32,11 +32,15 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                                 }
                                 .doOnComplete { outputStream.onNext(AudioResult(Result.Status.FINISHED)) }
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .startWith(AudioResult(Result.Status.IN_FLIGHT))
+                                .startWith(AudioResult(Result.Status.STOPPED))
                     }
                 is PauseAction -> {
                     rxAudioPlayer.pause()
                     Observable.just(AudioResult(Result.Status.ON_PAUSE))
+                }
+                is StopAction -> {
+                    rxAudioPlayer.stopPlay()
+                    Observable.just(AudioResult(Result.Status.STOPPED))
                 }
                 else -> TODO()
             }

@@ -16,6 +16,7 @@ abstract class Result {
         SUCCESS,
         ERROR,
         ON_PAUSE,
-        FINISHED
+        FINISHED,
+        STOPPED
     }
 }

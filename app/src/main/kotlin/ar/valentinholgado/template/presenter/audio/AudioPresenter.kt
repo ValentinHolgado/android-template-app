@@ -64,10 +64,11 @@ class AudioPresenter constructor(audioView: ReactiveView<AudioUiModel, AudioEven
                                 isPlaying = true,
                                 // TODO Remove mocked ids
                                 content = AudioContent(
-                                        audioId = "mock id",
-                                        title = "no name found"))
+                                        audioId = "mocked id",
+                                        title = result.title ?: "No name found"))
                         Result.Status.ON_PAUSE -> state.copy(isPlaying = false)
                         Result.Status.FINISHED -> state.copy(isPlaying = false)
+                        Result.Status.STOPPED -> state.copy(isPlaying = false)
                         else -> state
                     }
                 }
