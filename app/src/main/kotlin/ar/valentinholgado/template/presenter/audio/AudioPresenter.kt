@@ -31,23 +31,18 @@ class AudioPresenter constructor(audioView: ReactiveView<AudioUiModel, AudioEven
     companion object {
         // Event to action mapping
         val eventsToActions = { events: Observable<AudioEvent> ->
-            events.filter { event -> event is TransportEvent }
-                    .flatMap { event ->
-                        when (event) {
-                            is TransportEvent -> {
-                                when (event.type) {
-                                    "TRANSPORT_PLAY" -> {
-                                        Observable.just(PlayAction("/sdcard/download/sample.wav"))
-                                    }
-                                    "TRANSPORT_PAUSE" -> {
-                                        Observable.just(PauseAction())
-                                    }
-                                    else -> TODO("Can't handle ${event::class.simpleName}")
-                                }
-                            }
+            events.flatMap { event ->
+                when (event) {
+                    is TransportEvent -> {
+                        when (event.type) {
+                            "TRANSPORT_PLAY" -> Observable.just(PlayAction("/sdcard/download/sample.wav"))
+                            "TRANSPORT_PAUSE" -> Observable.just(PauseAction())
                             else -> TODO("Can't handle ${event::class.simpleName}")
                         }
                     }
+                    else -> TODO("Can't handle ${event::class.simpleName}")
+                }
+            }
         }
 
         val resultsToContent = { results: Observable<Result> ->
