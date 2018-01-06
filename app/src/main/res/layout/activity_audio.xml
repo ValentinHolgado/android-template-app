@@ -44,7 +44,7 @@
                     android:id="@+id/transport_play_pause"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@android:drawable/ic_media_play"
+                    android:src="@{model.playing ? @android:drawable/ic_media_pause :  @android:drawable/ic_media_play}"
                     android:layout_centerInParent="true"
                     />
             </RelativeLayout>

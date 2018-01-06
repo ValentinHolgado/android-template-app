@@ -1,13 +1,16 @@
 package ar.valentinholgado.template.view.audio
 
-import android.content.Intent
+import android.Manifest
+import android.content.pm.PackageManager
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import ar.valentinholgado.template.R
 import ar.valentinholgado.template.databinding.ActivityAudioBinding
 import ar.valentinholgado.template.view.ReactiveActivity
 import com.jakewharton.rxbinding2.view.clicks
-import io.reactivex.Observer
+
 
 class AudioActivity : ReactiveActivity<AudioUiModel, AudioEvent>() {
 
@@ -20,16 +23,40 @@ class AudioActivity : ReactiveActivity<AudioUiModel, AudioEvent>() {
 
     override fun onStart() {
         super.onStart()
+        askForPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1)
+        askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2)
         connectOutput()
     }
 
     private fun connectOutput() {
         binding.transportPlayPause.clicks()
-                .map { _ -> TransportEvent("TRANSPORT_PLAY_PAUSE")}
+                .map { _ ->
+                    binding.model?.let {
+                        if (it.isPlaying) TransportEvent("TRANSPORT_PAUSE")
+                        else TransportEvent("TRANSPORT_PLAY")
+                    }
+                }
                 .subscribe(outputStream)
     }
 
     override val successHandler = { model: AudioUiModel ->
         binding.model = model
+    }
+
+    // TODO Remove this function.
+    // Taken from https://www.sitepoint.com/requesting-runtime-permissions-in-android-m-and-n/
+    private fun askForPermission(permission: String, requestCode: Int) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                //This is called if user has denied the permission before
+                //In this case I am just asking the permission again
+                ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
+
+            } else {
+                ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
+            }
+        }
     }
 }

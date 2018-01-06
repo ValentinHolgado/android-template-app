@@ -3,6 +3,7 @@ package ar.valentinholgado.template.inject
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import ar.valentinholgado.template.backend.Repository
+import ar.valentinholgado.template.backend.audio.AudioRepository
 import ar.valentinholgado.template.presenter.audio.AudioPresenter
 import ar.valentinholgado.template.presenter.detail.DetailPresenter
 import ar.valentinholgado.template.presenter.home.HomePresenter
@@ -105,7 +106,7 @@ class AudioModule {
     @Provides
     @ActivityScope
     @Named("presenter")
-    fun presenter(audioActivity: AudioActivity, repository: Repository): Any {
+    fun presenter(audioActivity: AudioActivity, repository: AudioRepository): Any {
         return AudioPresenter(audioActivity, repository)
     }
 }

@@ -14,6 +14,8 @@ abstract class Result {
     enum class Status {
         IN_FLIGHT,
         SUCCESS,
-        ERROR
+        ERROR,
+        ON_PAUSE,
+        FINISHED
     }
 }

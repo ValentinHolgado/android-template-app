@@ -1,6 +1,7 @@
 package ar.valentinholgado.template.view.audio
 
 data class AudioUiModel(val content: AudioContent,
+                        val isPlaying: Boolean = false,
                         val errorMessage: String? = null,
                         val isLoading: Boolean = false)
 
