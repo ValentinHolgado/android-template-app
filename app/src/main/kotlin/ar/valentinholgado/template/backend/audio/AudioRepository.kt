@@ -18,17 +18,22 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
         inputStream.flatMap { action ->
             when (action) {
                 is PlayAction ->
-                    play(action.filename)
-                            .map { prepared ->
-                                AudioResult(Result.Status.SUCCESS)
-                            }
-                            .onErrorReturn { error ->
-                                AudioResult(errorMessage = error.message,
-                                        status = Result.Status.ERROR)
-                            }
-                            .doOnComplete { outputStream.onNext(AudioResult(Result.Status.FINISHED)) }
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .startWith(AudioResult(Result.Status.IN_FLIGHT))
+                    if (rxAudioPlayer.progress() > 0) {
+                        rxAudioPlayer.resume()
+                        Observable.just(AudioResult(Result.Status.SUCCESS))
+                    } else {
+                        rxAudioPlayer.play(PlayConfig.url(action.filename).build())
+                                .map { prepared ->
+                                    AudioResult(Result.Status.SUCCESS)
+                                }
+                                .onErrorReturn { error ->
+                                    AudioResult(errorMessage = error.message,
+                                            status = Result.Status.ERROR)
+                                }
+                                .doOnComplete { outputStream.onNext(AudioResult(Result.Status.FINISHED)) }
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .startWith(AudioResult(Result.Status.IN_FLIGHT))
+                    }
                 is PauseAction -> {
                     rxAudioPlayer.pause()
                     Observable.just(AudioResult(Result.Status.ON_PAUSE))
@@ -36,9 +41,5 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                 else -> TODO()
             }
         }.subscribe(outputStream)
-    }
-
-    fun play(filename: String): Observable<Boolean> {
-        return rxAudioPlayer.play(PlayConfig.url(filename).build())
     }
 }
