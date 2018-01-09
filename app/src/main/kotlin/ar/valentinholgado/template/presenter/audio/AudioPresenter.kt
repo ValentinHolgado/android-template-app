@@ -23,7 +23,6 @@ class AudioPresenter constructor(audioView: ReactiveView<AudioUiModel, AudioEven
 
         repository.outputStream
                 .compose(resultsToContent)
-                .doOnEach { action -> Timber.d(action.toString()) }
                 .subscribe(audioView.inputStream())
     }
 
