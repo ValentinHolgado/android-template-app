@@ -1,4 +1,4 @@
-package ar.valentinholgado.template.view.audio
+package ar.valentinholgado.template.view.soundplayer
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -12,7 +12,7 @@ import ar.valentinholgado.template.view.ReactiveActivity
 import com.jakewharton.rxbinding2.view.clicks
 
 
-class AudioActivity : ReactiveActivity<AudioUiModel, AudioEvent>() {
+class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
 
     private lateinit var binding: ActivityAudioBinding
 
@@ -32,11 +32,13 @@ class AudioActivity : ReactiveActivity<AudioUiModel, AudioEvent>() {
         binding.transportPlayPause.clicks()
                 .map { _ ->
                     binding.model?.let {
-                        if (it.isPlaying) TransportEvent("TRANSPORT_PAUSE")
-                        else TransportEvent("TRANSPORT_PLAY")
+                        if (it.isPlaying) PauseEvent()
+                        else PlayEvent()
                     }
                 }
                 .subscribe(outputStream)
+
+        outputStream.onNext(ReadyEvent())
     }
 
     override val successHandler = { model: AudioUiModel ->

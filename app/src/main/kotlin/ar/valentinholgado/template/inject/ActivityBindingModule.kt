@@ -4,16 +4,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import ar.valentinholgado.template.backend.Repository
 import ar.valentinholgado.template.backend.audio.AudioRepository
-import ar.valentinholgado.template.presenter.audio.AudioPresenter
+import ar.valentinholgado.template.backend.files.FilesRepository
+import ar.valentinholgado.template.presenter.audio.SoundPlayerPresenter
 import ar.valentinholgado.template.presenter.detail.DetailPresenter
 import ar.valentinholgado.template.presenter.home.HomePresenter
 import ar.valentinholgado.template.presenter.mockdetail.MockDetailPresenter
 import ar.valentinholgado.template.presenter.selector.SelectorPresenter
 import ar.valentinholgado.template.view.Event
 import ar.valentinholgado.template.view.ReactiveView
-import ar.valentinholgado.template.view.audio.AudioActivity
-import ar.valentinholgado.template.view.audio.AudioEvent
-import ar.valentinholgado.template.view.audio.AudioUiModel
+import ar.valentinholgado.template.view.soundplayer.SoundPlayerActivity
+import ar.valentinholgado.template.view.soundplayer.SoundPlayerEvent
+import ar.valentinholgado.template.view.soundplayer.AudioUiModel
 import ar.valentinholgado.template.view.detail.DetailActivity
 import ar.valentinholgado.template.view.detail.DetailEvent
 import ar.valentinholgado.template.view.detail.DetailUiModel
@@ -54,10 +55,10 @@ abstract class ActivityBindingModule {
      */
     @ContributesAndroidInjector(modules = arrayOf(AudioModule::class))
     @ActivityScope
-    abstract fun audioActivity(): AudioActivity
+    abstract fun audioActivity(): SoundPlayerActivity
 
     @Binds
-    abstract fun audioView(audioActivity: AudioActivity): ReactiveView<AudioUiModel, AudioEvent>
+    abstract fun audioView(audioActivity: SoundPlayerActivity): ReactiveView<AudioUiModel, SoundPlayerEvent>
 }
 
 @Module
@@ -106,7 +107,9 @@ class AudioModule {
     @Provides
     @ActivityScope
     @Named("presenter")
-    fun presenter(audioActivity: AudioActivity, repository: AudioRepository): Any {
-        return AudioPresenter(audioActivity, repository)
+    fun presenter(audioActivity: SoundPlayerActivity,
+                  audioRepository: AudioRepository,
+                  filesRepository: FilesRepository): Any {
+        return SoundPlayerPresenter(audioActivity, audioRepository, filesRepository)
     }
 }

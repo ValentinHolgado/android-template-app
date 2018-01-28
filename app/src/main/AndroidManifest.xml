@@ -50,7 +50,7 @@
                     android:scheme="app" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.audio.AudioActivity">
+        <activity android:name=".view.soundplayer.SoundPlayerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

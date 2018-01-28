@@ -7,7 +7,7 @@
 
         <variable
             name="model"
-            type="ar.valentinholgado.template.view.audio.AudioUiModel" />
+            type="ar.valentinholgado.template.view.soundplayer.AudioUiModel" />
 
         <import type="android.view.View" />
     </data>

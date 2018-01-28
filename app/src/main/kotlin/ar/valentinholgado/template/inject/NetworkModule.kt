@@ -5,6 +5,7 @@ import ar.valentinholgado.template.backend.StreamCache
 import ar.valentinholgado.template.backend.artsy.ArtsyApi
 import ar.valentinholgado.template.backend.artsy.ArtsyRepository
 import ar.valentinholgado.template.backend.audio.AudioRepository
+import ar.valentinholgado.template.backend.files.FilesRepository
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -91,6 +92,12 @@ class NetworkModule {
     @ApplicationScope
     fun provideAudioRepository(rxAudioPlayer: RxAudioPlayer): AudioRepository {
         return AudioRepository(rxAudioPlayer = rxAudioPlayer)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideFilesRepository(): FilesRepository {
+        return FilesRepository()
     }
 
     @Provides

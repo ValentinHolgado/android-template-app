@@ -1,4 +1,4 @@
-package ar.valentinholgado.template.view.audio
+package ar.valentinholgado.template.view.soundplayer
 
 data class AudioUiModel(val content: AudioContent,
                         val isPlaying: Boolean = false,

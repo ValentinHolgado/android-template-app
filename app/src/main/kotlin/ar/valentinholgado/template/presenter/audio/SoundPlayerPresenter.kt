@@ -5,39 +5,45 @@ import ar.valentinholgado.template.backend.audio.AudioRepository
 import ar.valentinholgado.template.backend.audio.AudioResult
 import ar.valentinholgado.template.backend.audio.PauseAction
 import ar.valentinholgado.template.backend.audio.PlayAction
+import ar.valentinholgado.template.backend.files.FilesRepository
+import ar.valentinholgado.template.backend.files.ListFilesAction
 import ar.valentinholgado.template.view.ReactiveView
-import ar.valentinholgado.template.view.audio.AudioContent
-import ar.valentinholgado.template.view.audio.AudioEvent
-import ar.valentinholgado.template.view.audio.AudioUiModel
-import ar.valentinholgado.template.view.audio.TransportEvent
+import ar.valentinholgado.template.view.soundplayer.*
 import io.reactivex.Observable
 import timber.log.Timber
 
-class AudioPresenter constructor(audioView: ReactiveView<AudioUiModel, AudioEvent>,
-                                 repository: AudioRepository) {
+class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, SoundPlayerEvent>,
+                                       audioRepository: AudioRepository,
+                                       filesRepository: FilesRepository) {
 
     init {
+        // Connect to the audio engine.
         audioView.outputStream()
                 .compose(eventsToActions)
-                .subscribe(repository.inputStream)
+                .subscribe(audioRepository.inputStream)
 
-        repository.outputStream
+        audioRepository.outputStream
+                .compose(resultsToContent)
+                .subscribe(audioView.inputStream())
+
+        // Connect to the files repository.
+        audioView.outputStream()
+                .compose(eventsToActions)
+                .subscribe(filesRepository.inputStream)
+
+        filesRepository.outputStream
                 .compose(resultsToContent)
                 .subscribe(audioView.inputStream())
     }
 
     companion object {
         // Event to action mapping
-        val eventsToActions = { events: Observable<AudioEvent> ->
-            events.flatMap { event ->
+        val eventsToActions = { events: Observable<SoundPlayerEvent> ->
+            events.map { event ->
                 when (event) {
-                    is TransportEvent -> {
-                        when (event.type) {
-                            "TRANSPORT_PLAY" -> Observable.just(PlayAction("/sdcard/download/sample.wav"))
-                            "TRANSPORT_PAUSE" -> Observable.just(PauseAction())
-                            else -> TODO("Can't handle ${event::class.simpleName}")
-                        }
-                    }
+                    is PlayEvent -> PlayAction("/sdcard/download/sample.wav")
+                    is PauseEvent -> PauseAction()
+                    is ReadyEvent -> ListFilesAction()
                     else -> TODO("Can't handle ${event::class.simpleName}")
                 }
             }
