@@ -6,7 +6,7 @@
 
         <variable
             name="viewHolderModel"
-            type="ar.valentinholgado.template.view.soundplayer.AudioFile" />
+            type="ar.valentinholgado.template.view.soundplayer.AudioFileContent" />
 
         <variable
             name="eventHandler"
@@ -15,7 +15,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@{ viewHolderModel.selected ? @color/colorAccent : @color/colorPrimary }">
 
         <TextView
             android:id="@+id/viewholder_audiofile_name"
@@ -23,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="@{viewHolderModel.name}"
             android:textSize="@dimen/viewholder_title_text_size"
-            tools:text="Some audio file name"/>
+            tools:text="Some audio file name" />
 
         <TextView
             android:layout_width="match_parent"
@@ -31,7 +32,7 @@
             android:layout_below="@id/viewholder_audiofile_name"
             android:text="@{viewHolderModel.path}"
             android:textSize="@dimen/viewholder_title_text_size"
-            tools:text="/some/audio/file/path/guitar.wav"/>
+            tools:text="/some/audio/file/path/guitar.wav" />
 
     </RelativeLayout>
 </layout>

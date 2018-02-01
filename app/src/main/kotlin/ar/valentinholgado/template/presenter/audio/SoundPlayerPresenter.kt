@@ -10,7 +10,7 @@ import ar.valentinholgado.template.backend.files.FilesResult
 import ar.valentinholgado.template.backend.files.ListFilesAction
 import ar.valentinholgado.template.view.ReactiveView
 import ar.valentinholgado.template.view.soundplayer.AudioContent
-import ar.valentinholgado.template.view.soundplayer.AudioFile
+import ar.valentinholgado.template.view.soundplayer.AudioFileContent
 import ar.valentinholgado.template.view.soundplayer.AudioUiModel
 import ar.valentinholgado.template.view.soundplayer.PauseEvent
 import ar.valentinholgado.template.view.soundplayer.PlayEvent
@@ -68,7 +68,7 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                     handleAudioResult(result, state)
                 }
                 is FilesResult -> {
-                    state.copy(fileList = result.fileList.map { file -> AudioFile(file.absolutePath, file.name) })
+                    state.copy(fileList = result.fileList.map { file -> AudioFileContent(file.absolutePath, file.name) })
                 }
                 else -> state
             }
