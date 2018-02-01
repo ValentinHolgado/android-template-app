@@ -6,9 +6,15 @@ import ar.valentinholgado.template.backend.audio.AudioResult
 import ar.valentinholgado.template.backend.audio.PauseAction
 import ar.valentinholgado.template.backend.audio.PlayAction
 import ar.valentinholgado.template.backend.files.FilesRepository
+import ar.valentinholgado.template.backend.files.FilesResult
 import ar.valentinholgado.template.backend.files.ListFilesAction
 import ar.valentinholgado.template.view.ReactiveView
-import ar.valentinholgado.template.view.soundplayer.*
+import ar.valentinholgado.template.view.soundplayer.AudioContent
+import ar.valentinholgado.template.view.soundplayer.AudioUiModel
+import ar.valentinholgado.template.view.soundplayer.PauseEvent
+import ar.valentinholgado.template.view.soundplayer.PlayEvent
+import ar.valentinholgado.template.view.soundplayer.ReadyEvent
+import ar.valentinholgado.template.view.soundplayer.SoundPlayerEvent
 import io.reactivex.Observable
 import timber.log.Timber
 
@@ -58,24 +64,31 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
         val accumulator = { state: AudioUiModel, result: Result ->
             when (result) {
                 is AudioResult -> {
-                    when (result.status) {
-                        Result.Status.SUCCESS -> state.copy(
-                                isPlaying = true,
-                                // TODO Remove mocked ids
-                                content = AudioContent(
-                                        audioId = "mocked id",
-                                        title = result.title))
-                        Result.Status.PLAYING -> state.copy(
-                                isPlaying = true,
-                                content = state.content.copy(
-                                        title = result.title))
-                        Result.Status.RESUMING -> state.copy(isPlaying = true)
-                        Result.Status.ON_PAUSE -> state.copy(isPlaying = false)
-                        Result.Status.FINISHED -> state.copy(isPlaying = false)
-                        Result.Status.STOPPED -> state.copy(isPlaying = false)
-                        else -> state
-                    }
+                    handleAudioResult(result, state)
                 }
+                is FilesResult -> {
+                    state.copy(fileList = result.fileList.map { file -> file.absolutePath })
+                }
+                else -> state
+            }
+        }
+
+        private fun handleAudioResult(result: AudioResult, state: AudioUiModel): AudioUiModel {
+            return when (result.status) {
+                Result.Status.SUCCESS -> state.copy(
+                        isPlaying = true,
+                        // TODO Remove mocked ids
+                        content = AudioContent(
+                                audioId = "mocked id",
+                                title = result.title))
+                Result.Status.PLAYING -> state.copy(
+                        isPlaying = true,
+                        content = state.content.copy(
+                                title = result.title))
+                Result.Status.RESUMING -> state.copy(isPlaying = true)
+                Result.Status.ON_PAUSE -> state.copy(isPlaying = false)
+                Result.Status.FINISHED -> state.copy(isPlaying = false)
+                Result.Status.STOPPED -> state.copy(isPlaying = false)
                 else -> state
             }
         }

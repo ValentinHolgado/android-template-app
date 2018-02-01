@@ -1,5 +1,6 @@
 package ar.valentinholgado.template.inject
 
+import android.app.Application
 import ar.valentinholgado.template.backend.Repository
 import ar.valentinholgado.template.backend.StreamCache
 import ar.valentinholgado.template.backend.artsy.ArtsyApi
@@ -96,8 +97,8 @@ class NetworkModule {
 
     @Provides
     @ApplicationScope
-    fun provideFilesRepository(): FilesRepository {
-        return FilesRepository()
+    fun provideFilesRepository(application: Application): FilesRepository {
+        return FilesRepository(context = application)
     }
 
     @Provides
