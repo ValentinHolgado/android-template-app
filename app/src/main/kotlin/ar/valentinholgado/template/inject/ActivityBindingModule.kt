@@ -12,15 +12,16 @@ import ar.valentinholgado.template.presenter.mockdetail.MockDetailPresenter
 import ar.valentinholgado.template.presenter.selector.SelectorPresenter
 import ar.valentinholgado.template.view.Event
 import ar.valentinholgado.template.view.ReactiveView
-import ar.valentinholgado.template.view.soundplayer.SoundPlayerActivity
-import ar.valentinholgado.template.view.soundplayer.SoundPlayerEvent
-import ar.valentinholgado.template.view.soundplayer.AudioUiModel
 import ar.valentinholgado.template.view.detail.DetailActivity
 import ar.valentinholgado.template.view.detail.DetailEvent
 import ar.valentinholgado.template.view.detail.DetailUiModel
 import ar.valentinholgado.template.view.feed.FeedActivity
 import ar.valentinholgado.template.view.feed.FeedAdapter
 import ar.valentinholgado.template.view.feed.FeedUiModel
+import ar.valentinholgado.template.view.soundplayer.AudioFileAdapter
+import ar.valentinholgado.template.view.soundplayer.AudioUiModel
+import ar.valentinholgado.template.view.soundplayer.SoundPlayerActivity
+import ar.valentinholgado.template.view.soundplayer.SoundPlayerEvent
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -66,18 +67,18 @@ class FeedModule {
 
     @Provides
     @ActivityScope
-    fun layoutManager(feedActivity: FeedActivity): RecyclerView.LayoutManager {
-        return LinearLayoutManager(feedActivity)
-    }
-
-    @Provides
-    @ActivityScope
     @Named("presenter")
     fun presenter(feedActivity: FeedActivity, repository: Repository): Any {
         return when (feedActivity.intent?.data?.host) {
             "feed" -> HomePresenter(feedActivity, repository)
             else -> SelectorPresenter(feedActivity)
         }
+    }
+
+    @Provides
+    @ActivityScope
+    fun layoutManager(feedActivity: FeedActivity): RecyclerView.LayoutManager {
+        return LinearLayoutManager(feedActivity)
     }
 
     @Provides
@@ -111,5 +112,18 @@ class AudioModule {
                   audioRepository: AudioRepository,
                   filesRepository: FilesRepository): Any {
         return SoundPlayerPresenter(audioActivity, audioRepository, filesRepository)
+    }
+
+
+    @Provides
+    @ActivityScope
+    fun layoutManager(soundPlayerActivity: SoundPlayerActivity): RecyclerView.LayoutManager {
+        return LinearLayoutManager(soundPlayerActivity)
+    }
+
+    @Provides
+    @ActivityScope
+    fun adapter(): AudioFileAdapter {
+        return AudioFileAdapter()
     }
 }

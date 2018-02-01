@@ -23,7 +23,7 @@
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/detail_main_image"
                 android:layout_width="0dp"
-                android:layout_height="300dp"
+                android:layout_height="100dp"
                 android:transitionName="imageTransition"
                 android:visibility="@{model.content.imageUri.isEmpty() ? View.GONE : View.VISIBLE}"
                 app:imageUrl="@{model.content.imageUri}"
@@ -44,9 +44,8 @@
                     android:id="@+id/transport_play_pause"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@{model.playing ? @android:drawable/ic_media_pause :  @android:drawable/ic_media_play}"
                     android:layout_centerInParent="true"
-                    />
+                    android:src="@{model.playing ? @android:drawable/ic_media_pause :  @android:drawable/ic_media_play}" />
             </RelativeLayout>
 
             <TextView
@@ -92,6 +91,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_subtitle"
                 tools:text="@sample/tools:lorem" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/file_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_body"
+                tools:listitem="@layout/viewholder_audiofile" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

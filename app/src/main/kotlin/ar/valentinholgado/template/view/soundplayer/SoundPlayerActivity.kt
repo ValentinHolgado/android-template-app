@@ -6,19 +6,25 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.RecyclerView
 import ar.valentinholgado.template.R
 import ar.valentinholgado.template.databinding.ActivityAudioBinding
 import ar.valentinholgado.template.view.ReactiveActivity
 import com.jakewharton.rxbinding2.view.clicks
+import javax.inject.Inject
 
 
 class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
 
+    @Inject lateinit var layoutManager: RecyclerView.LayoutManager
+    @Inject lateinit var adapter: AudioFileAdapter
     private lateinit var binding: ActivityAudioBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_audio)
+        binding.fileList.layoutManager = layoutManager
+        binding.fileList.adapter = adapter
     }
 
     override fun onStart() {
@@ -42,6 +48,10 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
     }
 
     override val successHandler = { model: AudioUiModel ->
+        model.fileList?.let {
+           adapter.updateList(it)
+        }
+
         binding.model = model
     }
 
