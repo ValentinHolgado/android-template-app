@@ -16,7 +16,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{ viewHolderModel.selected ? @color/colorAccent : @color/colorPrimary }">
+        android:background="@{ viewHolderModel.selected ? @color/colorAccent : @color/backgroundWhite }"
+        android:onClick="@{() -> eventHandler.onItemClick(viewHolderModel)}">
 
         <TextView
             android:id="@+id/viewholder_audiofile_name"

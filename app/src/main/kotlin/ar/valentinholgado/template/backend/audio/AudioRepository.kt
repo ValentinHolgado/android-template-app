@@ -35,7 +35,9 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                                 rxAudioPlayer.play(PlayConfig.url(action.filename).build())
                                         .map { _ ->
                                             trackInfo = action.filename
-                                            AudioResult(Result.Status.SUCCESS, title = action.filename)
+                                            AudioResult(Result.Status.SUCCESS,
+                                                    title = action.filename,
+                                                    filepath = action.filename)
                                         }
                                         .mergeWith(ticks())
                                         .onErrorReturn { error ->
@@ -64,7 +66,8 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                 .map { _ ->
                     AudioResult(Result.Status.PLAYING,
                             progress = rxAudioPlayer.progress(),
-                            title = trackInfo ?: "No track information")
+                            title = trackInfo ?: "No track information",
+                            filepath = trackInfo)
                 }
                 .takeWhile { _ ->
                     rxAudioPlayer.mediaPlayer != null

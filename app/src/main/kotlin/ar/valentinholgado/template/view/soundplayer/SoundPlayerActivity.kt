@@ -44,6 +44,10 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
                 }
                 .subscribe(outputStream)
 
+        adapter.outputStream()
+                .map { event -> SelectFileEvent(event.cardContent.path) }
+                .subscribe(outputStream)
+
         outputStream.onNext(ReadyEvent())
     }
 

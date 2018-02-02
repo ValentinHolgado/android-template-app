@@ -15,6 +15,7 @@ import ar.valentinholgado.template.view.soundplayer.AudioUiModel
 import ar.valentinholgado.template.view.soundplayer.PauseEvent
 import ar.valentinholgado.template.view.soundplayer.PlayEvent
 import ar.valentinholgado.template.view.soundplayer.ReadyEvent
+import ar.valentinholgado.template.view.soundplayer.SelectFileEvent
 import ar.valentinholgado.template.view.soundplayer.SoundPlayerEvent
 import io.reactivex.Observable
 import timber.log.Timber
@@ -51,6 +52,7 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                     is PlayEvent -> PlayAction("/sdcard/download/sample.wav")
                     is PauseEvent -> PauseAction()
                     is ReadyEvent -> ListFilesAction()
+                    is SelectFileEvent -> PlayAction(event.path)
                     else -> TODO("Can't handle ${event::class.simpleName}")
                 }
             }
