@@ -27,7 +27,8 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                 .flatMap { action ->
                     when (action) {
                         is PlayAction ->
-                            if (rxAudioPlayer.progress() > 0) {
+                            if (rxAudioPlayer.progress() > 0
+                                    && action.filename == trackInfo) {
                                 rxAudioPlayer.resume()
                                 Observable.just(AudioResult(Result.Status.RESUMING))
                                         .mergeWith(ticks())

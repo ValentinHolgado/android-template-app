@@ -30,16 +30,14 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                 .compose(eventsToActions)
                 .subscribe(audioRepository.inputStream)
 
-        audioRepository.outputStream
-                .compose(resultsToContent)
-                .subscribe(audioView.inputStream())
-
         // Connect to the files repository.
         audioView.outputStream()
                 .compose(eventsToActions)
                 .subscribe(filesRepository.inputStream)
 
-        filesRepository.outputStream
+        // Merge streams
+        audioRepository.outputStream
+                .mergeWith(filesRepository.outputStream)
                 .compose(resultsToContent)
                 .subscribe(audioView.inputStream())
     }
@@ -65,12 +63,15 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
         }
 
         val accumulator = { state: AudioUiModel, result: Result ->
+            Timber.d(result.toString() + state.toString())
             when (result) {
                 is AudioResult -> {
                     handleAudioResult(result, state)
                 }
                 is FilesResult -> {
-                    state.copy(fileList = result.fileList.map { file -> AudioFileContent(file.absolutePath, file.name) })
+                    state.copy(fileList = result.copy().fileList.map { file ->
+                        AudioFileContent(file.absolutePath, file.name)
+                    })
                 }
                 else -> state
             }
@@ -80,19 +81,37 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
             return when (result.status) {
                 Result.Status.SUCCESS -> state.copy(
                         isPlaying = true,
+                        selectedFilePath = result.filepath,
+                        fileList = updateSelectedInList(state, result),
                         // TODO Remove mocked ids
                         content = AudioContent(
                                 audioId = "mocked id",
-                                title = result.title))
-                Result.Status.PLAYING -> state.copy(
+                                title = result.title)
+                )
+                Result.Status.PLAYING
+                -> state.copy(
                         isPlaying = true,
+                        selectedFilePath = result.filepath,
+                        fileList = updateSelectedInList(state, result),
                         content = state.content.copy(
                                 title = result.title))
-                Result.Status.RESUMING -> state.copy(isPlaying = true)
+                Result.Status.RESUMING -> state.copy(isPlaying = true,
+                        selectedFilePath = result.filepath,
+                        fileList = updateSelectedInList(state, result))
                 Result.Status.ON_PAUSE -> state.copy(isPlaying = false)
                 Result.Status.FINISHED -> state.copy(isPlaying = false)
                 Result.Status.STOPPED -> state.copy(isPlaying = false)
                 else -> state
+            }
+        }
+
+        private fun updateSelectedInList(state: AudioUiModel, result: AudioResult): List<AudioFileContent>? {
+            return state.fileList?.map { file ->
+                if (file.path == result.filepath) {
+                    file.copy(selected = true)
+                } else {
+                    file.copy(selected = false)
+                }
             }
         }
     }
