@@ -6,7 +6,7 @@ import ar.valentinholgado.template.BR
 import io.reactivex.Observer
 
 class CardViewHolder<T>(val binding: ViewDataBinding,
-                           val eventStream: Observer<CardEvent<T>>) : RecyclerView.ViewHolder(binding.root) {
+                        val eventStream: Observer<CardEvent<T>>) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.setVariable(BR.eventHandler, object : CardEventHandler<T> {

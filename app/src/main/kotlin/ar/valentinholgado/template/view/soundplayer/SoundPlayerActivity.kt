@@ -54,7 +54,8 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
 
     override val successHandler = { model: AudioUiModel ->
         model.fileList?.let {
-           adapter.updateList(it)
+            if (it != binding.model?.fileList)
+                adapter.updateList(it)
         }
 
         binding.model = model
