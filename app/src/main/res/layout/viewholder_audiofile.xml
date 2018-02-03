@@ -27,13 +27,5 @@
             android:textSize="@dimen/viewholder_title_text_size"
             tools:text="Some audio file name" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/viewholder_audiofile_name"
-            android:text="@{viewHolderModel.path}"
-            android:textSize="@dimen/viewholder_title_text_size"
-            tools:text="/some/audio/file/path/guitar.wav" />
-
     </RelativeLayout>
 </layout>

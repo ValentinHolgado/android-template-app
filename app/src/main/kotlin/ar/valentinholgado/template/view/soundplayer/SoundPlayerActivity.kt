@@ -39,7 +39,7 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
                 .map { _ ->
                     binding.model?.let {
                         if (it.isPlaying) PauseEvent()
-                        else PlayEvent()
+                        else PlayEvent(it.selectedFilePath)
                     }
                 }
                 .subscribe(outputStream)

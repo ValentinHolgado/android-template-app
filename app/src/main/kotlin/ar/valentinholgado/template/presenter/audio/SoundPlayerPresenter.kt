@@ -47,7 +47,7 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
         val eventsToActions = { events: Observable<SoundPlayerEvent> ->
             events.map { event ->
                 when (event) {
-                    is PlayEvent -> PlayAction("/sdcard/download/sample.wav")
+                    is PlayEvent -> PlayAction(event.path ?: "")
                     is PauseEvent -> PauseAction()
                     is ReadyEvent -> ListFilesAction()
                     is SelectFileEvent -> PlayAction(event.path)
