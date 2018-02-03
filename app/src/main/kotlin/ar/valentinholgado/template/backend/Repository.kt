@@ -1,6 +1,7 @@
 package ar.valentinholgado.template.backend
 
 import ar.valentinholgado.template.backend.artsy.ArtsyRepository
+import ar.valentinholgado.template.backend.audio.AudioRepository
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.subjects.BehaviorSubject
@@ -12,7 +13,8 @@ import io.reactivex.subjects.Subject
  */
 class Repository(private val inputStream: Subject<Action> = BehaviorSubject.create(),
                  private val outputStream: Subject<Result> = BehaviorSubject.create(),
-                 val artsyRepository: ArtsyRepository) {
+                 val artsyRepository: ArtsyRepository,
+                 val audioRepository: AudioRepository) {
 
     init {
         inputStream

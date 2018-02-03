@@ -12,10 +12,9 @@ import ar.valentinholgado.template.view.detail.DetailEvent
 import ar.valentinholgado.template.view.detail.DetailUiModel
 import io.reactivex.Observable
 import timber.log.Timber
-import javax.inject.Inject
 
 class DetailPresenter constructor(detailView: ReactiveView<DetailUiModel, DetailEvent>,
-                                          repository: Repository) {
+                                  repository: Repository) {
 
     init {
         detailView.outputStream()

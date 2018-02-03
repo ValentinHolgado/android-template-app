@@ -51,6 +51,7 @@ class HomePresenter constructor(feedView: ReactiveView<FeedUiModel, Event>,
                 Result.Status.ERROR -> state.copy(isLoading = false,
                         errorMessage = result.errorMessage)
                 Result.Status.IN_FLIGHT -> state.copy(isLoading = true)
+                else -> state
             }
         }
 

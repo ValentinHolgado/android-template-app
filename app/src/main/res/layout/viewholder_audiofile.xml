@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewHolderModel"
+            type="ar.valentinholgado.template.view.soundplayer.AudioFileContent" />
+
+        <variable
+            name="eventHandler"
+            type="ar.valentinholgado.template.view.common.CardEventHandler" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@{ viewHolderModel.selected ? @color/colorAccent : @color/backgroundWhite }"
+        android:onClick="@{() -> eventHandler.onItemClick(viewHolderModel)}">
+
+        <TextView
+            android:id="@+id/viewholder_audiofile_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewHolderModel.name}"
+            android:textSize="@dimen/viewholder_title_text_size"
+            tools:text="Some audio file name" />
+
+    </RelativeLayout>
+</layout>

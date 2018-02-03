@@ -1,13 +1,17 @@
 package ar.valentinholgado.template.inject
 
+import android.app.Application
 import ar.valentinholgado.template.backend.Repository
 import ar.valentinholgado.template.backend.StreamCache
 import ar.valentinholgado.template.backend.artsy.ArtsyApi
 import ar.valentinholgado.template.backend.artsy.ArtsyRepository
+import ar.valentinholgado.template.backend.audio.AudioRepository
+import ar.valentinholgado.template.backend.files.FilesRepository
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.github.piasy.rxandroidaudio.RxAudioPlayer
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -81,7 +85,25 @@ class NetworkModule {
 
     @Provides
     @ApplicationScope
-    fun provideRepository(artsyRepository: ArtsyRepository): Repository {
-        return Repository(artsyRepository = artsyRepository)
+    fun provideRxAudioPlayer(): RxAudioPlayer {
+        return RxAudioPlayer.getInstance()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideAudioRepository(rxAudioPlayer: RxAudioPlayer): AudioRepository {
+        return AudioRepository(rxAudioPlayer = rxAudioPlayer)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideFilesRepository(application: Application): FilesRepository {
+        return FilesRepository(context = application)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideRepository(artsyRepository: ArtsyRepository, audioRepository: AudioRepository): Repository {
+        return Repository(artsyRepository = artsyRepository, audioRepository = audioRepository)
     }
 }

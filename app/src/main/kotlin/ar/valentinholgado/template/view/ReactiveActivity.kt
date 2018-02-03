@@ -3,6 +3,7 @@ package ar.valentinholgado.template.view
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
@@ -58,7 +59,9 @@ abstract class ReactiveActivity<M, E> : DaggerAppCompatActivity(), ReactiveView<
      * Subscribes the input stream to the success and error handlers.
      */
     fun subscribe() {
-        disposables.add(inputStream.subscribe(successHandler, errorHandler))
+        disposables.add(inputStream
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(successHandler, errorHandler))
     }
 
     /**
