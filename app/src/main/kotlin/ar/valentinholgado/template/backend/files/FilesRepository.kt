@@ -29,6 +29,7 @@ class FilesRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
 
         inputStream
                 .compose(actionsToResults)
+                .cache()
                 .subscribe(outputStream)
     }
 }

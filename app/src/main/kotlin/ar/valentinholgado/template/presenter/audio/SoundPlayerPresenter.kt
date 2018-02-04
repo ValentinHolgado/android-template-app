@@ -26,14 +26,12 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
 
     init {
         // Connect to the audio engine.
-        audioView.outputStream()
+        val viewEventStream = audioView.outputStream()
                 .compose(eventsToActions)
-                .subscribe(audioRepository.inputStream)
+                .share()
 
-        // Connect to the files repository.
-        audioView.outputStream()
-                .compose(eventsToActions)
-                .subscribe(filesRepository.inputStream)
+        viewEventStream.subscribe(audioRepository.inputStream)
+        viewEventStream.subscribe(filesRepository.inputStream)
 
         // Merge streams
         audioRepository.outputStream
