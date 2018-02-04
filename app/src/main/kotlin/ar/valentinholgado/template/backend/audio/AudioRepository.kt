@@ -29,25 +29,9 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                         is PlayAction ->
                             if (rxAudioPlayer.progress() > 0
                                     && action.filename == trackInfo) {
-                                rxAudioPlayer.resume()
-                                Observable.just(AudioResult(Result.Status.RESUMING))
-                                        .mergeWith(ticks())
+                                resumePlaying()
                             } else {
-                                rxAudioPlayer.play(PlayConfig.url(action.filename).build())
-                                        .map { _ ->
-                                            trackInfo = action.filename
-                                            AudioResult(Result.Status.SUCCESS,
-                                                    title = action.filename,
-                                                    filepath = action.filename)
-                                        }
-                                        .mergeWith(ticks())
-                                        .onErrorReturn { error ->
-                                            AudioResult(errorMessage = error.message,
-                                                    status = Result.Status.ERROR)
-                                        }
-                                        .doOnComplete { outputStream.onNext(AudioResult(Result.Status.FINISHED)) }
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .startWith(AudioResult(Result.Status.STOPPED))
+                                startPlaying(action)
                             }
                         is PauseAction -> {
                             rxAudioPlayer.pause()
@@ -60,6 +44,30 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                         else -> TODO(action.toString())
                     }
                 }.subscribe(outputStream)
+    }
+
+    private fun resumePlaying(): Observable<AudioResult>? {
+        rxAudioPlayer.resume()
+        return Observable.just(AudioResult(Result.Status.RESUMING))
+                .mergeWith(ticks())
+    }
+
+    private fun startPlaying(action: PlayAction): Observable<AudioResult>? {
+        return rxAudioPlayer.play(PlayConfig.url(action.filename).build())
+                .map { _ ->
+                    trackInfo = action.filename
+                    AudioResult(Result.Status.SUCCESS,
+                            title = action.filename,
+                            filepath = action.filename)
+                }
+                .mergeWith(ticks())
+                .onErrorReturn { error ->
+                    AudioResult(errorMessage = error.message,
+                            status = Result.Status.ERROR)
+                }
+                .doOnComplete { outputStream.onNext(AudioResult(Result.Status.FINISHED)) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .startWith(AudioResult(Result.Status.STOPPED))
     }
 
     private fun ticks(): Observable<AudioResult> {
