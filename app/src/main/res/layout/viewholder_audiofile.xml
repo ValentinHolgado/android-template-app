@@ -16,6 +16,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
         android:background="@{ viewHolderModel.selected ? @color/colorAccent : @color/backgroundWhite }"
         android:onClick="@{() -> eventHandler.onItemClick(viewHolderModel)}">
 
@@ -24,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{viewHolderModel.name}"
-            android:textSize="@dimen/viewholder_title_text_size"
+            android:textSize="@dimen/h3_text_size"
             tools:text="Some audio file name" />
 
     </RelativeLayout>
