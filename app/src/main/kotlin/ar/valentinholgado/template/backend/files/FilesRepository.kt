@@ -19,6 +19,8 @@ class FilesRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                         FilesResult(
                                 status = Result.Status.SUCCESS,
                                 fileList = context
+                                        // TODO Remove Hardcoded DIRECTORY_MUSIC. Choose the folder
+                                        // using the action.
                                         .getExternalFilesDir(DIRECTORY_MUSIC)
                                         .listFiles()
                                         .toList()

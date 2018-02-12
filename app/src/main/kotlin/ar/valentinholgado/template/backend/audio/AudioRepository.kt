@@ -35,10 +35,13 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                             }
                         is PauseAction -> {
                             rxAudioPlayer.pause()
-                            Observable.just(AudioResult(Result.Status.ON_PAUSE))
+                            Observable.just(AudioResult(Result.Status.ON_PAUSE,
+                                    trackInfo,
+                                    trackInfo))
                         }
                         is StopAction -> {
                             rxAudioPlayer.stopPlay()
+                            trackInfo = null
                             Observable.just(AudioResult(Result.Status.STOPPED))
                         }
                         else -> TODO(action.toString())

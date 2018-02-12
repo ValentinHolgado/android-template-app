@@ -30,62 +30,39 @@
             android:id="@+id/transport_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
             android:padding="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@color/colorPrimaryDark">
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageView
                 android:id="@+id/transport_play_pause"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
                 android:src="@{model.playing ? @android:drawable/ic_media_pause :  @android:drawable/ic_media_play}" />
+
+            <TextView
+                android:id="@+id/detail_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/transport_play_pause"
+                android:layout_centerHorizontal="true"
+                android:text="@{model.content.title}"
+                android:textSize="24sp"
+                android:textColor="@color/backgroundWhite"
+                tools:text="Title" />
+
+            <TextView
+                android:id="@+id/transport_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/detail_title"
+                android:layout_centerHorizontal="true"
+                android:text="@{model.content.title}"
+                android:textSize="24sp"
+                android:textColor="@color/backgroundWhite"
+                tools:text="Progress" />
         </RelativeLayout>
-
-        <TextView
-            android:id="@+id/detail_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@{model.content.title}"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transport_bar"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="133dp"
-            tools:text="Title" />
-
-        <TextView
-            android:id="@+id/detail_subtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@{model.content.subtitle}"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_title"
-            tools:layout_editor_absoluteX="16dp"
-            tools:text="Subtitle" />
-
-        <TextView
-            android:id="@+id/detail_body"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@{model.content.description}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_subtitle"
-            tools:text="@sample/tools:lorem" />
-
 
     </android.support.constraint.ConstraintLayout>
 </layout>
