@@ -77,6 +77,30 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                 .startWith(AudioResult(Result.Status.STOPPED))
     }
 
+    private fun resumePlaying(): Observable<AudioResult>? {
+        rxAudioPlayer.resume()
+        return Observable.just(AudioResult(Result.Status.RESUMING))
+                .mergeWith(ticks())
+    }
+
+    private fun startPlaying(action: PlayAction): Observable<AudioResult>? {
+        return rxAudioPlayer.play(PlayConfig.url(action.filename).build())
+                .map { _ ->
+                    trackInfo = action.filename
+                    AudioResult(Result.Status.SUCCESS,
+                            title = action.filename,
+                            filepath = action.filename)
+                }
+                .mergeWith(ticks())
+                .onErrorReturn { error ->
+                    AudioResult(errorMessage = error.message,
+                            status = Result.Status.ERROR)
+                }
+                .doOnComplete { outputStream.onNext(AudioResult(Result.Status.FINISHED)) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .startWith(AudioResult(Result.Status.STOPPED))
+    }
+
     private fun ticks(): Observable<AudioResult> {
         return Observable.interval(16, TimeUnit.MILLISECONDS)
                 .map { _ ->
