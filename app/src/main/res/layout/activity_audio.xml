@@ -12,96 +12,58 @@
         <import type="android.view.View" />
     </data>
 
-    <ScrollView
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/file_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/transport_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/viewholder_audiofile" />
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/detail_main_image"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:transitionName="imageTransition"
-                android:visibility="@{model.content.imageUri.isEmpty() ? View.GONE : View.VISIBLE}"
-                app:imageUrl="@{model.content.imageUri}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:background="@android:color/darker_gray"
-                tools:visibility="gone" />
+        <RelativeLayout
+            android:id="@+id/transport_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <RelativeLayout
-                android:id="@+id/transport_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/detail_main_image"
-                tools:background="@android:color/holo_blue_light">
-
-                <ImageView
-                    android:id="@+id/transport_play_pause"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerInParent="true"
-                    android:src="@{model.playing ? @android:drawable/ic_media_pause :  @android:drawable/ic_media_play}" />
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/transport_play_pause"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:src="@{model.playing ? @android:drawable/ic_media_pause :  @android:drawable/ic_media_play}" />
 
             <TextView
                 android:id="@+id/detail_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_below="@+id/transport_play_pause"
+                android:layout_centerHorizontal="true"
                 android:text="@{model.content.title}"
                 android:textSize="24sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/transport_bar"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="133dp"
+                android:textColor="@color/backgroundWhite"
                 tools:text="Title" />
 
             <TextView
-                android:id="@+id/detail_subtitle"
-                android:layout_width="0dp"
+                android:id="@+id/transport_progress"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="@{model.content.subtitle}"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detail_title"
-                tools:layout_editor_absoluteX="16dp"
-                tools:text="Subtitle" />
+                android:layout_below="@+id/detail_title"
+                android:layout_centerHorizontal="true"
+                android:text="@{model.content.title}"
+                android:textSize="24sp"
+                android:textColor="@color/backgroundWhite"
+                tools:text="Progress" />
+        </RelativeLayout>
 
-            <TextView
-                android:id="@+id/detail_body"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="@{model.content.description}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detail_subtitle"
-                tools:text="@sample/tools:lorem" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/file_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detail_body"
-                tools:listitem="@layout/viewholder_audiofile" />
-
-        </android.support.constraint.ConstraintLayout>
-    </ScrollView>
+    </android.support.constraint.ConstraintLayout>
 </layout>
 

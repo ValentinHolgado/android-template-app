@@ -35,15 +35,20 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                             }
                         is PauseAction -> {
                             rxAudioPlayer.pause()
-                            Observable.just(AudioResult(Result.Status.ON_PAUSE))
+                            Observable.just(AudioResult(Result.Status.ON_PAUSE,
+                                    trackInfo,
+                                    trackInfo))
                         }
                         is StopAction -> {
                             rxAudioPlayer.stopPlay()
+                            trackInfo = null
                             Observable.just(AudioResult(Result.Status.STOPPED))
                         }
                         else -> TODO(action.toString())
                     }
-                }.subscribe(outputStream)
+                }
+                .cache()
+                .subscribe(outputStream)
     }
 
     private fun resumePlaying(): Observable<AudioResult>? {
@@ -65,7 +70,9 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                     AudioResult(errorMessage = error.message,
                             status = Result.Status.ERROR)
                 }
-                .doOnComplete { outputStream.onNext(AudioResult(Result.Status.FINISHED)) }
+                .doOnComplete { outputStream.onNext(AudioResult(Result.Status.FINISHED,
+                        title = action.filename,
+                        filepath = action.filename)) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .startWith(AudioResult(Result.Status.STOPPED))
     }

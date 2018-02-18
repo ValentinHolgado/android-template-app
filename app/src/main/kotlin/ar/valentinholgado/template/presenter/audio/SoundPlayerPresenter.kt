@@ -30,12 +30,12 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                 .compose(eventsToActions)
                 .share()
 
-        viewEventStream.subscribe(audioRepository.inputStream)
         viewEventStream.subscribe(filesRepository.inputStream)
+        viewEventStream.subscribe(audioRepository.inputStream)
 
         // Merge streams
-        audioRepository.outputStream
-                .mergeWith(filesRepository.outputStream)
+        filesRepository.outputStream
+                .mergeWith(audioRepository.outputStream)
                 .compose(resultsToContent)
                 .subscribe(audioView.inputStream())
     }
@@ -96,8 +96,13 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                 Result.Status.RESUMING -> state.copy(isPlaying = true,
                         selectedFilePath = result.filepath,
                         fileList = updateSelectedInList(state, result))
-                Result.Status.ON_PAUSE -> state.copy(isPlaying = false)
-                Result.Status.FINISHED -> state.copy(isPlaying = false)
+                Result.Status.ON_PAUSE -> state.copy(isPlaying = false,
+                        selectedFilePath = result.filepath,
+                        fileList = updateSelectedInList(state, result),
+                        content = state.content.copy(
+                                title = result.title))
+                Result.Status.FINISHED -> state.copy(isPlaying = false,
+                        fileList = updateSelectedInList(state, result))
                 Result.Status.STOPPED -> state.copy(isPlaying = false)
                 else -> state
             }
