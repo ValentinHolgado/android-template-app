@@ -98,7 +98,9 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                         fileList = updateSelectedInList(state, result))
                 Result.Status.ON_PAUSE -> state.copy(isPlaying = false,
                         selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state, result))
+                        fileList = updateSelectedInList(state, result),
+                        content = state.content.copy(
+                                title = result.title))
                 Result.Status.FINISHED -> state.copy(isPlaying = false,
                         fileList = updateSelectedInList(state, result))
                 Result.Status.STOPPED -> state.copy(isPlaying = false)
