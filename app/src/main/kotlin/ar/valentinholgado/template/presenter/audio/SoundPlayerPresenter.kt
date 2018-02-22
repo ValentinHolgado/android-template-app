@@ -77,6 +77,7 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
 
         private fun handleAudioResult(result: AudioResult, state: AudioUiModel): AudioUiModel {
             return when (result.status) {
+
                 Result.Status.SUCCESS -> state.copy(
                         isPlaying = true,
                         selectedFilePath = result.filepath,
@@ -84,26 +85,36 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                         // TODO Remove mocked ids
                         content = AudioContent(
                                 audioId = "mocked id",
-                                title = result.title)
-                )
-                Result.Status.PLAYING
-                -> state.copy(
+                                title = result.title))
+
+                Result.Status.PLAYING -> state.copy(
                         isPlaying = true,
                         selectedFilePath = result.filepath,
                         fileList = updateSelectedInList(state, result),
                         content = state.content.copy(
                                 title = result.title))
-                Result.Status.RESUMING -> state.copy(isPlaying = true,
+
+                Result.Status.RESUMING -> state.copy(
+                        isPlaying = true,
                         selectedFilePath = result.filepath,
                         fileList = updateSelectedInList(state, result))
-                Result.Status.ON_PAUSE -> state.copy(isPlaying = false,
+
+                Result.Status.ON_PAUSE -> state.copy(
+                        isPlaying = false,
                         selectedFilePath = result.filepath,
                         fileList = updateSelectedInList(state, result),
                         content = state.content.copy(
                                 title = result.title))
-                Result.Status.FINISHED -> state.copy(isPlaying = false,
-                        fileList = updateSelectedInList(state, result))
+
+                Result.Status.FINISHED -> state.copy(
+                        isPlaying = false,
+                        selectedFilePath = result.filepath,
+                        fileList = updateSelectedInList(state, result),
+                        content = state.content.copy(
+                                title = result.title))
+
                 Result.Status.STOPPED -> state.copy(isPlaying = false)
+
                 else -> state
             }
         }
