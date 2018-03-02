@@ -55,9 +55,8 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
         }
 
         val resultsToContent = { results: Observable<Result> ->
-            results.doOnEach { result -> Timber.i("Result: %s", result) }
-                    // TODO remove mocked ids
-                    .scan(AudioUiModel(AudioContent(audioId = "mock id", title = "")), accumulator)
+            // TODO Remove mocked id
+            results.scan(AudioUiModel(AudioContent(audioId = "mock id", title = "")), accumulator)
         }
 
         val accumulator = { state: AudioUiModel, result: Result ->
@@ -67,9 +66,9 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                     handleAudioResult(result, state)
                 }
                 is FilesResult -> {
-                    state.copy(fileList = result.copy().fileList.map { file ->
+                    state.copy(fileList = updateSelectedInList(result.copy().fileList.map { file ->
                         AudioFileContent(file.absolutePath, file.name)
-                    })
+                    }, state.selectedFilePath))
                 }
                 else -> state
             }
@@ -81,7 +80,7 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                 Result.Status.SUCCESS -> state.copy(
                         isPlaying = true,
                         selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state, result),
+                        fileList = updateSelectedInList(state.fileList, result.filepath),
                         // TODO Remove mocked ids
                         content = AudioContent(
                                 audioId = "mocked id",
@@ -90,26 +89,26 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                 Result.Status.PLAYING -> state.copy(
                         isPlaying = true,
                         selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state, result),
+                        fileList = updateSelectedInList(state.fileList, result.filepath),
                         content = state.content.copy(
                                 title = result.title))
 
                 Result.Status.RESUMING -> state.copy(
                         isPlaying = true,
                         selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state, result))
+                        fileList = updateSelectedInList(state.fileList, result.filepath))
 
                 Result.Status.ON_PAUSE -> state.copy(
                         isPlaying = false,
                         selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state, result),
+                        fileList = updateSelectedInList(state.fileList, result.filepath),
                         content = state.content.copy(
                                 title = result.title))
 
                 Result.Status.FINISHED -> state.copy(
                         isPlaying = false,
                         selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state, result),
+                        fileList = updateSelectedInList(state.fileList, result.filepath),
                         content = state.content.copy(
                                 title = result.title))
 
@@ -119,9 +118,9 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
             }
         }
 
-        private fun updateSelectedInList(state: AudioUiModel, result: AudioResult): List<AudioFileContent>? {
-            return state.fileList?.map { file ->
-                if (file.path == result.filepath) {
+        private fun updateSelectedInList(list: List<AudioFileContent>?, path: String?): List<AudioFileContent>? {
+            return list?.map { file ->
+                if (file.path == path) {
                     file.copy(selected = true)
                 } else {
                     file.copy(selected = false)
