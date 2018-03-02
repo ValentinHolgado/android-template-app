@@ -155,6 +155,7 @@ dependencies {
     testImplementation "org.jetbrains.spek:spek-api:$spek_version"
     testImplementation "org.jetbrains.spek:spek-junit-platform-engine:$spek_version"
     testImplementation "org.junit.platform:junit-platform-runner:$junit_platform_runner_version"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.0.0-M4'
 
     // Unmock
     unmock "org.robolectric:android-all:$android_jar_version"
