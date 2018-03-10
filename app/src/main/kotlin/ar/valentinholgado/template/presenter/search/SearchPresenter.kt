@@ -1,4 +1,4 @@
-package ar.valentinholgado.template.presenter.home
+package ar.valentinholgado.template.presenter.search
 
 import android.net.Uri
 import ar.valentinholgado.template.backend.Repository
@@ -17,8 +17,8 @@ import ar.valentinholgado.template.view.feed.SearchEvent
 import io.reactivex.Observable
 import timber.log.Timber
 
-class HomePresenter constructor(feedView: ReactiveView<FeedUiModel, Event>,
-                                        repository: Repository) {
+class SearchPresenter constructor(feedView: ReactiveView<FeedUiModel, Event>,
+                                  repository: Repository) {
 
     init {
         feedView.outputStream()
@@ -57,7 +57,10 @@ class HomePresenter constructor(feedView: ReactiveView<FeedUiModel, Event>,
 
         private fun unwrap(result: Result): List<CardContent>? {
             return when (result) {
-                is SearchResult -> result.body?.map(entryToCardContent)
+                is SearchResult -> result.body
+                        //TODO Filter by type until all types are supported.
+                        ?.filter { entry -> entry.type == "artist" || entry.type == "show" }
+                        ?.map(entryToCardContent)
                 is ArtworkResult -> result.body?.map(artworkToCardContent)
                 else -> ArrayList()
             }
