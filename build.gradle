@@ -27,6 +27,7 @@ buildscript {
         unmock_version = '0.6.4'
         timber_version = '4.5.1'
         leakcanary_version = '1.5.4'
+        room_version = '1.1.0-alpha3'
     }
 
     repositories {

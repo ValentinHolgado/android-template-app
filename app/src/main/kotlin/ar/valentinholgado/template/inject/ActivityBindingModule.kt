@@ -5,11 +5,13 @@ import android.support.v7.widget.RecyclerView
 import ar.valentinholgado.template.backend.Repository
 import ar.valentinholgado.template.backend.audio.AudioRepository
 import ar.valentinholgado.template.backend.files.FilesRepository
+import ar.valentinholgado.template.backend.tasks.TasksRepository
 import ar.valentinholgado.template.presenter.audio.SoundPlayerPresenter
 import ar.valentinholgado.template.presenter.detail.DetailPresenter
 import ar.valentinholgado.template.presenter.home.HomePresenter
 import ar.valentinholgado.template.presenter.mockdetail.MockDetailPresenter
 import ar.valentinholgado.template.presenter.selector.SelectorPresenter
+import ar.valentinholgado.template.presenter.tasks.TasksPresenter
 import ar.valentinholgado.template.view.Event
 import ar.valentinholgado.template.view.ReactiveView
 import ar.valentinholgado.template.view.detail.DetailActivity
@@ -22,6 +24,9 @@ import ar.valentinholgado.template.view.soundplayer.AudioFileAdapter
 import ar.valentinholgado.template.view.soundplayer.AudioUiModel
 import ar.valentinholgado.template.view.soundplayer.SoundPlayerActivity
 import ar.valentinholgado.template.view.soundplayer.SoundPlayerEvent
+import ar.valentinholgado.template.view.tasks.TasksActivity
+import ar.valentinholgado.template.view.tasks.TasksAdapter
+import ar.valentinholgado.template.view.tasks.TasksUiModel
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -60,6 +65,16 @@ abstract class ActivityBindingModule {
 
     @Binds
     abstract fun audioView(audioActivity: SoundPlayerActivity): ReactiveView<AudioUiModel, SoundPlayerEvent>
+
+    /**
+     * Provides an instance of {@link AudioActivity}
+     */
+    @ContributesAndroidInjector(modules = arrayOf(TasksModule::class))
+    @ActivityScope
+    abstract fun tasksActivity(): TasksActivity
+
+    @Binds
+    abstract fun tasksView(tasksActivity: TasksActivity): ReactiveView<TasksUiModel, Event>
 }
 
 @Module
@@ -125,5 +140,28 @@ class AudioModule {
     @ActivityScope
     fun adapter(): AudioFileAdapter {
         return AudioFileAdapter()
+    }
+}
+
+@Module
+class TasksModule {
+
+    @Provides
+    @ActivityScope
+    @Named("presenter")
+    fun presenter(tasksActivity: TasksActivity, repository: TasksRepository): Any {
+        return TasksPresenter(tasksActivity, repository)
+    }
+
+    @Provides
+    @ActivityScope
+    fun layoutManager(tasksActivity: TasksActivity): RecyclerView.LayoutManager {
+        return LinearLayoutManager(tasksActivity)
+    }
+
+    @Provides
+    @ActivityScope
+    fun adapter(): TasksAdapter {
+        return TasksAdapter()
     }
 }

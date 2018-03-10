@@ -27,6 +27,11 @@ class SelectorPresenter @Inject constructor(selectorView: ReactiveView<FeedUiMod
                                 title = "Audio",
                                 subtitle = "Record and play audio",
                                 intentUri = "app://audio"
+                        ),
+                        CardContent(
+                                title = "Tasks",
+                                subtitle = "A classic to-do app",
+                                intentUri = "app://tasks"
                         )
                 ))
 

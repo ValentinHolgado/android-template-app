@@ -1,5 +1,7 @@
 package ar.valentinholgado.template.view
 
+import android.content.Intent
+import android.net.Uri
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.Observer
@@ -62,6 +64,15 @@ abstract class ReactiveActivity<M, E> : DaggerAppCompatActivity(), ReactiveView<
         disposables.add(inputStream
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(successHandler, errorHandler))
+    }
+
+    /**
+     * Navigates to an activity using a deeplink
+     */
+    protected fun navigateTo(intentUri: String?) {
+        intentUri?.let {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
+        }
     }
 
     /**

@@ -8,8 +8,8 @@ package ar.valentinholgado.template.backend
  */
 abstract class Result {
     abstract val status: Status
-    abstract val successMessage: String?
-    abstract val errorMessage: String?
+    open val successMessage: String? = null
+    open val errorMessage: String? = null
 
     enum class Status {
         IN_FLIGHT,

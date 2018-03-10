@@ -1,12 +1,16 @@
 package ar.valentinholgado.template.inject
 
 import android.app.Application
+import android.arch.persistence.room.Room
 import ar.valentinholgado.template.backend.Repository
 import ar.valentinholgado.template.backend.StreamCache
 import ar.valentinholgado.template.backend.artsy.ArtsyApi
 import ar.valentinholgado.template.backend.artsy.ArtsyRepository
 import ar.valentinholgado.template.backend.audio.AudioRepository
 import ar.valentinholgado.template.backend.files.FilesRepository
+import ar.valentinholgado.template.backend.tasks.TasksRepository
+import ar.valentinholgado.template.backend.tasks.db.TasksDao
+import ar.valentinholgado.template.backend.tasks.db.TasksDatabase
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -21,6 +25,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import javax.inject.Named
+
 
 @Module
 class NetworkModule {
@@ -105,5 +110,26 @@ class NetworkModule {
     @ApplicationScope
     fun provideRepository(artsyRepository: ArtsyRepository, audioRepository: AudioRepository): Repository {
         return Repository(artsyRepository = artsyRepository, audioRepository = audioRepository)
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideTasksDatabase(application: Application): TasksDatabase {
+        return Room.databaseBuilder(application,
+                TasksDatabase::class.java,
+                "Tasks.db")
+                .build()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideTasksdao(tasksDatabase: TasksDatabase): TasksDao {
+        return tasksDatabase.tasksDao()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideTasksRepository(tasksDao: TasksDao): TasksRepository {
+        return TasksRepository(tasksDao = tasksDao)
     }
 }

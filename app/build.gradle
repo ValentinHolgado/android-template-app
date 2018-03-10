@@ -122,6 +122,11 @@ dependencies {
     implementation 'com.github.piasy:rxandroidaudio:1.5.1'
     implementation 'com.github.piasy:AudioProcessor:1.5.1'
 
+    // Room
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
+    implementation "android.arch.persistence.room:rxjava2:$room_version"
+
     /**
      * Debugging
      */
@@ -159,6 +164,9 @@ dependencies {
 
     // Unmock
     unmock "org.robolectric:android-all:$android_jar_version"
+
+    // Room
+    testImplementation "android.arch.persistence.room:testing:$room_version"
 
     // Espresso
     androidTestImplementation("com.android.support.test.espresso:espresso-core:$espresso_core_version", {

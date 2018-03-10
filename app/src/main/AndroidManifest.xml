@@ -59,6 +59,15 @@
                     android:scheme="app" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.tasks.TasksActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="tasks"
+                    android:scheme="app" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
