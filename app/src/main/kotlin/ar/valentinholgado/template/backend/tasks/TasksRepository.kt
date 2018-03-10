@@ -6,6 +6,7 @@ import ar.valentinholgado.template.backend.tasks.db.TaskEntity
 import ar.valentinholgado.template.backend.tasks.db.TasksDao
 import io.reactivex.Observable
 import io.reactivex.Observer
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
 import java.util.*
@@ -19,16 +20,23 @@ class TasksRepository(private val inputStream: Subject<Action> = BehaviorSubject
         actions.map { action ->
             when (action) {
                 is NewTaskAction -> {
-                    tasksDao.insertTask(TaskEntity(UUID.randomUUID().toString(),
-                            action.title,
-                            action.description,
-                            false))
+                    tasksDao.insertTask(
+                            TaskEntity(UUID.randomUUID().toString(),
+                                    action.title,
+                                    action.description,
+                                    false))
                     AddTaskResult(Result.Status.SUCCESS)
                 }
 
                 is UpdateTaskAction -> {
                     val task = action.task
-                    tasksDao.insertTask(TaskEntity(task.id, task.title, task.description, task.completed))
+
+                    tasksDao.insertTask(
+                            TaskEntity(task.id,
+                                    task.title,
+                                    task.description,
+                                    task.completed))
+
                     AddTaskResult(Result.Status.SUCCESS)
                 }
 
@@ -60,18 +68,23 @@ class TasksRepository(private val inputStream: Subject<Action> = BehaviorSubject
     init {
         inputStream
                 .compose(tasks)
+                .subscribeOn(Schedulers.io())
                 .subscribe(outputStream)
 
-        tasksDao.getTasks().map { tasks ->
-            GetTasksResult(
-                    tasks.map { task ->
-                        Task(task.id,
-                                task.title,
-                                task.description,
-                                task.completed)
-                    },
-                    Result.Status.SUCCESS)
-        }
+        tasksDao.getTasks()
+                .map { tasks ->
+                    GetTasksResult(
+                            tasks.map { task ->
+                                Task(task.id,
+                                        task.title,
+                                        task.description,
+                                        task.completed)
+                            },
+                            Result.Status.SUCCESS)
+                }
+                // TODO Use flowable
+                .toObservable()
+                .subscribe(outputStream)
     }
 
     fun inputStream(): Observer<Action> {

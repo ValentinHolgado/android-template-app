@@ -37,13 +37,14 @@ class TasksActivity : ReactiveActivity<TasksUiModel, Event>() {
         disposables.add(
                 adapter.outputStream()
                         .subscribe { event ->
+                            Timber.d("Event" + event.toString())
                             when (event) {
+                                is CheckboxEvent -> {
+                                    outputStream.onNext(event)
+                                }
                                 is CardEvent -> {
                                     Timber.d("Navigating to task ${event.cardContent.id}")
                                     navigateTo("app://taskdetail?id=${event.cardContent.id}")
-                                }
-                                is CheckboxEvent -> {
-                                    outputStream.onNext(event)
                                 }
                             }
                         })

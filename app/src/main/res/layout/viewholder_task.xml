@@ -20,7 +20,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{ () -> eventHandler.onItemClick(viewHolderModel) }"
         android:orientation="horizontal">
 
         <CheckBox
@@ -34,7 +33,10 @@
             android:id="@+id/task_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginStart="18dp"
+            android:layout_marginLeft="18dp"
             android:text="@{viewHolderModel.title}"
+            android:onClick="@{ () -> eventHandler.onItemClick(viewHolderModel) }"
             tools:text="Buy groceries" />
     </LinearLayout>
 </layout>
