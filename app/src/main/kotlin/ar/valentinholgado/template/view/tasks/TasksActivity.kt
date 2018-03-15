@@ -2,6 +2,7 @@ package ar.valentinholgado.template.view.tasks
 
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import ar.valentinholgado.template.R
 import ar.valentinholgado.template.databinding.ActivityTasksBinding
@@ -37,7 +38,7 @@ class TasksActivity : ReactiveActivity<TasksUiModel, Event>() {
         disposables.add(
                 adapter.outputStream()
                         .subscribe { event ->
-                            Timber.d("Event" + event.toString())
+                            Timber.d("Event: ${event}")
                             when (event) {
                                 is CheckboxEvent -> {
                                     outputStream.onNext(event)
@@ -48,9 +49,14 @@ class TasksActivity : ReactiveActivity<TasksUiModel, Event>() {
                                 }
                             }
                         })
+
     }
 
     override val successHandler = { uiModel: TasksUiModel ->
+        uiModel.snackbarMessage?.let {
+            Snackbar.make(binding.tasksContainer, it, Snackbar.LENGTH_LONG).show()
+        }
+
         adapter.updateList(uiModel.tasksList)
     }
 }

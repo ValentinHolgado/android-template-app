@@ -41,11 +41,12 @@ class TasksRepository(private val inputStream: Subject<Action> = BehaviorSubject
                 }
 
                 is CompleteTaskAction -> {
-                    TODO()
+                    tasksDao.updateCompletedTask(action.taskId, true)
                     CompleteTaskResult(Result.Status.SUCCESS)
                 }
 
                 is ActivateTaskAction -> {
+                    tasksDao.updateCompletedTask(action.taskId, false)
                     ActivateTaskResult(Result.Status.SUCCESS)
                 }
 
@@ -67,8 +68,8 @@ class TasksRepository(private val inputStream: Subject<Action> = BehaviorSubject
 
     init {
         inputStream
+                .observeOn(Schedulers.computation())
                 .compose(tasks)
-                .subscribeOn(Schedulers.io())
                 .subscribe(outputStream)
 
         tasksDao.getTasks()

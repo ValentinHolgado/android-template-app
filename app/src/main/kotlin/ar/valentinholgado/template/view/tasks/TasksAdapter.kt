@@ -26,7 +26,7 @@ class TasksAdapter : CardAdapter<TaskUiModel>() {
     }
 }
 
-class CheckboxEvent(val checked: Boolean, uiModel: TaskUiModel) : CardEvent<TaskUiModel>(uiModel)
+data class CheckboxEvent(val checked: Boolean, val uiModel: TaskUiModel) : CardEvent<TaskUiModel>(uiModel)
 
 interface CheckboxHandler {
     fun onCheckboxChange(checked: Boolean, uiModel: TaskUiModel)
