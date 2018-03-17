@@ -1,19 +1,24 @@
 package ar.valentinholgado.template.backend.audio
 
+import android.media.MediaRecorder
 import ar.valentinholgado.template.backend.Action
 import ar.valentinholgado.template.backend.Result
+import com.github.piasy.rxandroidaudio.AudioRecorder
 import com.github.piasy.rxandroidaudio.PlayConfig
 import com.github.piasy.rxandroidaudio.RxAudioPlayer
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
+import java.io.File
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(),
                       val outputStream: Subject<Result> = BehaviorSubject.create(),
-                      private val rxAudioPlayer: RxAudioPlayer) {
+                      private val rxAudioPlayer: RxAudioPlayer,
+                      private val audioRecorder: AudioRecorder) {
 
     private var trackInfo: String? = null
 
@@ -23,6 +28,8 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                     action is PlayAction
                             || action is PauseAction
                             || action is StopAction
+                            || action is StartRecordAction
+                            || action is StopRecordAction
                 }
                 .flatMap { action ->
                     when (action) {
@@ -42,6 +49,20 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                         is StopAction -> {
                             rxAudioPlayer.stopPlay()
                             trackInfo = null
+                            Observable.just(AudioResult(Result.Status.STOPPED))
+                        }
+                        is StartRecordAction -> {
+                            audioRecorder.startRecord(
+                                    MediaRecorder.AudioSource.DEFAULT,
+                                    MediaRecorder.OutputFormat.MPEG_4,
+                                    MediaRecorder.AudioEncoder.AAC,
+                                    48000,
+                                    24,
+                                    File("/storage/emulated/0/Android/data/ar.valentinh.openlibrary/files/Music/${UUID.randomUUID()}.mp4"))
+                            Observable.just(AudioResult(Result.Status.PLAYING))
+                        }
+                        is StopRecordAction -> {
+                            audioRecorder.stopRecord()
                             Observable.just(AudioResult(Result.Status.STOPPED))
                         }
                         else -> TODO(action.toString())
@@ -70,9 +91,11 @@ class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(
                     AudioResult(errorMessage = error.message,
                             status = Result.Status.ERROR)
                 }
-                .doOnComplete { outputStream.onNext(AudioResult(Result.Status.FINISHED,
-                        title = action.filename,
-                        filepath = action.filename)) }
+                .doOnComplete {
+                    outputStream.onNext(AudioResult(Result.Status.FINISHED,
+                            title = action.filename,
+                            filepath = action.filename))
+                }
                 .observeOn(AndroidSchedulers.mainThread())
                 .startWith(AudioResult(Result.Status.STOPPED))
     }

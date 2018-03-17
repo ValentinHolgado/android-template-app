@@ -16,8 +16,10 @@ import javax.inject.Inject
 
 class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
 
-    @Inject lateinit var layoutManager: RecyclerView.LayoutManager
-    @Inject lateinit var adapter: AudioFileAdapter
+    @Inject
+    lateinit var layoutManager: RecyclerView.LayoutManager
+    @Inject
+    lateinit var adapter: AudioFileAdapter
     private lateinit var binding: ActivityAudioBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +33,7 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
         super.onStart()
         askForPermission(Manifest.permission.READ_EXTERNAL_STORAGE, 1)
         askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2)
+        askForPermission(Manifest.permission.RECORD_AUDIO, 3)
         connectOutput()
     }
 
@@ -40,6 +43,15 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
                     binding.model?.let {
                         if (it.isPlaying) PauseEvent()
                         else PlayEvent(it.selectedFilePath)
+                    }
+                }
+                .subscribe(outputStream)
+
+        binding.transportRecord.clicks()
+                .map { _ ->
+                    binding.model?.let {
+                        if (it.isPlaying) StopRecordEvent()
+                        else StartRecordEvent()
                     }
                 }
                 .subscribe(outputStream)

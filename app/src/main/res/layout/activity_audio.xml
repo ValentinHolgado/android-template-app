@@ -41,6 +41,14 @@
                 android:layout_centerHorizontal="true"
                 android:src="@{model.playing ? @android:drawable/ic_media_pause :  @android:drawable/ic_media_play}" />
 
+            <ImageView
+                android:id="@+id/transport_record"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:layout_toRightOf="@id/transport_play_pause"
+                android:src="@drawable/ic_fiber_manual_record_black_48dp" />
+
             <TextView
                 android:id="@+id/detail_title"
                 android:layout_width="wrap_content"

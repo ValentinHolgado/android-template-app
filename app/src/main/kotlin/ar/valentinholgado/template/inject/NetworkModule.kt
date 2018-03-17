@@ -11,6 +11,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.github.piasy.rxandroidaudio.AudioRecorder
 import com.github.piasy.rxandroidaudio.RxAudioPlayer
 import dagger.Module
 import dagger.Provides
@@ -91,8 +92,14 @@ class NetworkModule {
 
     @Provides
     @ApplicationScope
-    fun provideAudioRepository(rxAudioPlayer: RxAudioPlayer): AudioRepository {
-        return AudioRepository(rxAudioPlayer = rxAudioPlayer)
+    fun provideAudioRecorder(): AudioRecorder {
+        return AudioRecorder.getInstance()
+    }
+
+    @Provides
+    @ApplicationScope
+    fun provideAudioRepository(rxAudioPlayer: RxAudioPlayer, audioRecorder: AudioRecorder): AudioRepository {
+        return AudioRepository(rxAudioPlayer = rxAudioPlayer, audioRecorder = audioRecorder)
     }
 
     @Provides

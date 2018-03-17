@@ -5,6 +5,8 @@ import ar.valentinholgado.template.backend.audio.AudioRepository
 import ar.valentinholgado.template.backend.audio.AudioResult
 import ar.valentinholgado.template.backend.audio.PauseAction
 import ar.valentinholgado.template.backend.audio.PlayAction
+import ar.valentinholgado.template.backend.audio.StartRecordAction
+import ar.valentinholgado.template.backend.audio.StopRecordAction
 import ar.valentinholgado.template.backend.files.FilesRepository
 import ar.valentinholgado.template.backend.files.FilesResult
 import ar.valentinholgado.template.backend.files.ListFilesAction
@@ -17,6 +19,8 @@ import ar.valentinholgado.template.view.soundplayer.PlayEvent
 import ar.valentinholgado.template.view.soundplayer.ReadyEvent
 import ar.valentinholgado.template.view.soundplayer.SelectFileEvent
 import ar.valentinholgado.template.view.soundplayer.SoundPlayerEvent
+import ar.valentinholgado.template.view.soundplayer.StartRecordEvent
+import ar.valentinholgado.template.view.soundplayer.StopRecordEvent
 import io.reactivex.Observable
 import timber.log.Timber
 
@@ -49,6 +53,8 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                     is PauseEvent -> PauseAction()
                     is ReadyEvent -> ListFilesAction()
                     is SelectFileEvent -> PlayAction(event.path)
+                    is StartRecordEvent -> StartRecordAction()
+                    is StopRecordEvent -> StopRecordAction()
                     else -> TODO("Can't handle ${event::class.simpleName}")
                 }
             }
