@@ -25,9 +25,7 @@ import ar.valentinholgado.template.view.soundplayer.SoundPlayerEvent
 import ar.valentinholgado.template.view.soundplayer.StartRecordEvent
 import ar.valentinholgado.template.view.soundplayer.StopRecordEvent
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
 class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, SoundPlayerEvent>,
                                        audioRepository: AudioRepository,
@@ -95,8 +93,6 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                 .mergeWith(audioRepository.outputStream())
                 .doOnSubscribe { disposable -> subscription = disposable }
                 .compose(resultsToContent)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(audioView.inputStream())
     }
 
