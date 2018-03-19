@@ -25,8 +25,9 @@ import ar.valentinholgado.template.view.soundplayer.SoundPlayerEvent
 import ar.valentinholgado.template.view.soundplayer.StartRecordEvent
 import ar.valentinholgado.template.view.soundplayer.StopRecordEvent
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import timber.log.Timber
+import io.reactivex.schedulers.Schedulers
 
 class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, SoundPlayerEvent>,
                                        audioRepository: AudioRepository,
@@ -67,7 +68,7 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
         viewEventStream.subscribe(audioRepository.inputStream())
 
         val accumulator = { state: AudioUiModel, result: Result ->
-            Timber.d(result.toString() + state.toString())
+            // Timber.d(result.toString() + state.toString())
             when (result) {
                 is AudioResult -> {
                     handleAudioResult(result, state)
@@ -83,7 +84,7 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
 
         val resultsToContent = { results: Observable<Result> ->
             // TODO Remove mocked id
-            results.scan(AudioUiModel(AudioContent(audioId = "mock id", title = "")), accumulator)
+            results.scan(AudioUiModel(AudioContent(audioId = "mock id")), accumulator)
         }
 
         // Merge streams
@@ -91,6 +92,8 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
                 .mergeWith(audioRepository.outputStream())
                 .doOnSubscribe { disposable -> subscription = disposable }
                 .compose(resultsToContent)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(audioView.inputStream())
     }
 

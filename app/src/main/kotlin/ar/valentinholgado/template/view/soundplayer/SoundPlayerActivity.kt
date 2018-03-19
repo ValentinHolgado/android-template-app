@@ -18,8 +18,10 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
 
     @Inject
     lateinit var layoutManager: RecyclerView.LayoutManager
+
     @Inject
     lateinit var adapter: AudioFileAdapter
+
     private lateinit var binding: ActivityAudioBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +37,20 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
         askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, 2)
         askForPermission(Manifest.permission.RECORD_AUDIO, 3)
         connectOutput()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        outputStream.onNext(DestroyEvent())
+    }
+
+    override val successHandler = { model: AudioUiModel ->
+        model.fileList?.let {
+            if (it != binding.model?.fileList)
+                adapter.updateList(it)
+        }
+
+        binding.model = model
     }
 
     private fun connectOutput() {
@@ -65,20 +81,6 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
                 .subscribe(outputStream)
 
         outputStream.onNext(ReadyEvent())
-    }
-
-    override fun onStop() {
-        super.onStop()
-        outputStream.onNext(DestroyEvent())
-    }
-
-    override val successHandler = { model: AudioUiModel ->
-        model.fileList?.let {
-            if (it != binding.model?.fileList)
-                adapter.updateList(it)
-        }
-
-        binding.model = model
     }
 
     // TODO Remove this function.

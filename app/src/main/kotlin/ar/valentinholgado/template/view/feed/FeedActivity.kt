@@ -13,7 +13,6 @@ import ar.valentinholgado.template.view.ReactiveActivity
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChanges
 import com.jakewharton.rxbinding2.support.v7.widget.scrollEvents
 import io.reactivex.android.schedulers.AndroidSchedulers
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -51,7 +50,7 @@ class FeedActivity : ReactiveActivity<FeedUiModel, Event>() {
         disposables.add(
                 adapter.outputStream()
                         .subscribe { event ->
-                            Timber.d("Navigating to ${event.cardContent.intentUri}")
+                            // Timber.d("Navigating to ${event.cardContent.intentUri}")
                             navigateTo(event.cardContent.intentUri)
                         })
     }

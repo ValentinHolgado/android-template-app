@@ -32,32 +32,43 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryDark"
             android:padding="16dp"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <ImageView
-                android:id="@+id/transport_play_pause"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerHorizontal="true"
-                android:src="@{model.playing ? @android:drawable/ic_media_pause :  @android:drawable/ic_media_play}" />
+            <LinearLayout
+                android:id="@+id/controls_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
 
-            <ImageView
-                android:id="@+id/transport_record"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_centerHorizontal="true"
-                android:layout_toRightOf="@id/transport_play_pause"
-                android:src="@drawable/ic_fiber_manual_record_black_48dp" />
+                <ImageView
+                    android:id="@+id/transport_play_pause"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:tint="@color/backgroundWhite"
+                    android:src="@{model.playing ? @drawable/ic_pause_black_48dp :  @drawable/ic_play_arrow_black_48dp}" />
+
+                <ImageView
+                    android:id="@+id/transport_record"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="3dp"
+                    android:layout_toRightOf="@id/transport_play_pause"
+                    android:tint="@color/backgroundWhite"
+                    android:src="@drawable/ic_fiber_manual_record_black_48dp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/detail_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/transport_play_pause"
+                android:layout_below="@+id/controls_container"
                 android:layout_centerHorizontal="true"
                 android:text="@{model.content.title}"
                 android:textSize="24sp"
                 android:textColor="@color/backgroundWhite"
+                android:visibility="@{model.content.title == null ? View.GONE : View.VISIBLE}"
                 tools:text="Title" />
 
             <TextView
@@ -66,9 +77,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/detail_title"
                 android:layout_centerHorizontal="true"
-                android:text="@{model.content.title}"
+                android:text="@{model.content.subtitle}"
                 android:textSize="24sp"
                 android:textColor="@color/backgroundWhite"
+                android:visibility="@{model.content.subtitle == null ? View.GONE : View.VISIBLE}"
                 tools:text="Progress" />
         </RelativeLayout>
 
