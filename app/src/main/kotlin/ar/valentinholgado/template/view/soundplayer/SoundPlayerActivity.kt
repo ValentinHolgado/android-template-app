@@ -58,7 +58,7 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
                 .doOnSubscribe { disposable -> disposables.add(disposable) }
                 .map { _ ->
                     binding.model?.let {
-                        if (it.isPlaying) PauseEvent()
+                        if (it.isPlaying) PauseEvent(binding.model?.isRecording ?: false)
                         else PlayEvent(it.selectedFilePath)
                     }
                 }

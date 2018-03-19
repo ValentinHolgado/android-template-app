@@ -46,7 +46,7 @@
                     android:id="@+id/transport_play_pause"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:tint="@color/backgroundWhite"
+                    android:tint="@{model.recording ? @color/red : @color/backgroundWhite }"
                     android:src="@{model.playing ? @drawable/ic_pause_black_48dp :  @drawable/ic_play_arrow_black_48dp}" />
 
                 <ImageView
@@ -55,7 +55,7 @@
                     android:layout_height="40dp"
                     android:padding="3dp"
                     android:layout_toRightOf="@id/transport_play_pause"
-                    android:tint="@color/backgroundWhite"
+                    android:tint="@{model.recording ? @color/red : @color/backgroundWhite }"
                     android:src="@drawable/ic_fiber_manual_record_black_48dp" />
             </LinearLayout>
 

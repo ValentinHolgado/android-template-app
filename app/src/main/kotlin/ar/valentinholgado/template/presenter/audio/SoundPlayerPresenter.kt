@@ -40,7 +40,10 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
         events.map { event ->
             when (event) {
                 is PlayEvent -> PlayAction(event.path ?: "")
-                is PauseEvent -> PauseAction()
+                is PauseEvent -> {
+                    if (event.recording) StopRecordAction()
+                    else PauseAction()
+                }
                 is ReadyEvent -> ListFilesAction()
                 is DestroyEvent -> {
                     subscription?.dispose()
@@ -104,6 +107,7 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
 
                 Result.Status.SUCCESS -> state.copy(
                         isPlaying = true,
+                        isRecording = false,
                         selectedFilePath = result.filepath,
                         fileList = updateSelectedInList(state.fileList, result.filepath),
                         // TODO Remove mocked ids
@@ -113,6 +117,15 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
 
                 Result.Status.PLAYING -> state.copy(
                         isPlaying = true,
+                        isRecording = false,
+                        selectedFilePath = result.filepath,
+                        fileList = updateSelectedInList(state.fileList, result.filepath),
+                        content = state.content.copy(
+                                title = result.title))
+
+                Result.Status.RECORDING -> state.copy(
+                        isPlaying = true,
+                        isRecording = true,
                         selectedFilePath = result.filepath,
                         fileList = updateSelectedInList(state.fileList, result.filepath),
                         content = state.content.copy(
@@ -125,6 +138,7 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
 
                 Result.Status.ON_PAUSE -> state.copy(
                         isPlaying = false,
+                        isRecording = false,
                         selectedFilePath = result.filepath,
                         fileList = updateSelectedInList(state.fileList, result.filepath),
                         content = state.content.copy(
@@ -132,12 +146,13 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
 
                 Result.Status.FINISHED -> state.copy(
                         isPlaying = false,
+                        isRecording = false,
                         selectedFilePath = result.filepath,
                         fileList = updateSelectedInList(state.fileList, result.filepath),
                         content = state.content.copy(
                                 title = result.title))
 
-                Result.Status.STOPPED -> state.copy(isPlaying = false)
+                Result.Status.STOPPED -> state.copy(isPlaying = false, isRecording = false)
 
                 else -> state
             }

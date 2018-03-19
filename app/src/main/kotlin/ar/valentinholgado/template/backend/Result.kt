@@ -19,6 +19,7 @@ abstract class Result {
         FINISHED,
         STOPPED,
         PLAYING,
-        RESUMING
+        RESUMING,
+        RECORDING
     }
 }

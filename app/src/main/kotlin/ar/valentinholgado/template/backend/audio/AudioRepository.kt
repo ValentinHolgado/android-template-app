@@ -56,7 +56,7 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                                     48000,
                                     24,
                                     File("/storage/emulated/0/Android/data/ar.valentinh.openlibrary/files/Music/${UUID.randomUUID()}.mp4"))
-                            Observable.just(AudioResult(Result.Status.PLAYING))
+                            Observable.just(AudioResult(Result.Status.RECORDING))
                         }
                         is StopRecordAction -> {
                             audioRecorder.stopRecord()

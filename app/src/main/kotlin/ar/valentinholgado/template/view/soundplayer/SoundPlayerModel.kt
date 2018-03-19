@@ -4,6 +4,7 @@ data class AudioUiModel(val content: AudioContent,
                         val fileList: List<AudioFileContent>? = null,
                         val selectedFilePath: String? = null,
                         val isPlaying: Boolean = false,
+                        val isRecording: Boolean = false,
                         val errorMessage: String? = null,
                         val isLoading: Boolean = false)
 

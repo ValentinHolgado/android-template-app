@@ -4,7 +4,7 @@ import ar.valentinholgado.template.view.Event
 
 open class SoundPlayerEvent : Event()
 class PlayEvent(val path: String?) : SoundPlayerEvent()
-class PauseEvent : SoundPlayerEvent()
+class PauseEvent(val recording: Boolean = false) : SoundPlayerEvent()
 
 class ReadyEvent : SoundPlayerEvent()
 class DestroyEvent : SoundPlayerEvent()
