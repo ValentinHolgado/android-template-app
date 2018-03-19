@@ -7,8 +7,8 @@ import ar.valentinholgado.template.backend.audio.AudioRepository
 import ar.valentinholgado.template.backend.files.FilesRepository
 import ar.valentinholgado.template.presenter.audio.SoundPlayerPresenter
 import ar.valentinholgado.template.presenter.detail.DetailPresenter
-import ar.valentinholgado.template.presenter.home.HomePresenter
 import ar.valentinholgado.template.presenter.mockdetail.MockDetailPresenter
+import ar.valentinholgado.template.presenter.search.SearchPresenter
 import ar.valentinholgado.template.presenter.selector.SelectorPresenter
 import ar.valentinholgado.template.view.Event
 import ar.valentinholgado.template.view.ReactiveView
@@ -70,7 +70,7 @@ class FeedModule {
     @Named("presenter")
     fun presenter(feedActivity: FeedActivity, repository: Repository): Any {
         return when (feedActivity.intent?.data?.host) {
-            "feed" -> HomePresenter(feedActivity, repository)
+            "feed" -> SearchPresenter(feedActivity, repository)
             else -> SelectorPresenter(feedActivity)
         }
     }

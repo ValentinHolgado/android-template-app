@@ -1,11 +1,11 @@
 package ar.valentinholgado.template
 
+import ar.valentinholgado.template.backend.Result
 import ar.valentinholgado.template.backend.artsy.Link
 import ar.valentinholgado.template.backend.artsy.Links
-import ar.valentinholgado.template.backend.Result
 import ar.valentinholgado.template.backend.artsy.search.Entry
 import ar.valentinholgado.template.backend.artsy.search.SearchResult
-import ar.valentinholgado.template.presenter.home.HomePresenter
+import ar.valentinholgado.template.presenter.search.SearchPresenter
 import ar.valentinholgado.template.view.feed.FeedUiModel
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -20,7 +20,7 @@ import kotlin.test.assertTrue
 @RunWith(JUnitPlatform::class)
 class HomePresenterSpec : Spek({
     describe("a home presenter accumulator") {
-        val accumulator = HomePresenter.accumulator
+        val accumulator = SearchPresenter.accumulator
 
         on("a successful result") {
             val model = accumulator.invoke(FeedUiModel(), SearchResult(status = Result.Status.SUCCESS))
