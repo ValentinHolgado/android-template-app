@@ -39,6 +39,7 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
 
     private fun connectOutput() {
         binding.transportPlayPause.clicks()
+                .doOnSubscribe { disposable -> disposables.add(disposable) }
                 .map { _ ->
                     binding.model?.let {
                         if (it.isPlaying) PauseEvent()
@@ -48,6 +49,7 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
                 .subscribe(outputStream)
 
         binding.transportRecord.clicks()
+                .doOnSubscribe { disposable -> disposables.add(disposable) }
                 .map { _ ->
                     binding.model?.let {
                         if (it.isPlaying) StopRecordEvent()
@@ -58,6 +60,7 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
 
         // Click on an item in the file list
         adapter.outputStream()
+                .doOnSubscribe { disposable -> disposables.add(disposable) }
                 .map { event -> SelectFileEvent(event.cardContent.path) }
                 .subscribe(outputStream)
 
