@@ -2,23 +2,20 @@ package ar.valentinholgado.template.backend.audio
 
 import android.media.MediaRecorder
 import ar.valentinholgado.template.backend.Action
+import ar.valentinholgado.template.backend.BaseRepository
 import ar.valentinholgado.template.backend.Result
 import com.github.piasy.rxandroidaudio.AudioRecorder
 import com.github.piasy.rxandroidaudio.PlayConfig
 import com.github.piasy.rxandroidaudio.RxAudioPlayer
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class AudioRepository(val inputStream: Subject<Action> = BehaviorSubject.create(),
-                      val outputStream: Subject<Result> = BehaviorSubject.create(),
-                      private val rxAudioPlayer: RxAudioPlayer,
-                      private val audioRecorder: AudioRecorder) {
+class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
+                      private val audioRecorder: AudioRecorder) : BaseRepository<Action, Result>() {
 
     private var trackInfo: String? = null
 

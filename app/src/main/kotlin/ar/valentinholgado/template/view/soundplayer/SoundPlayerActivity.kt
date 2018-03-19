@@ -64,6 +64,11 @@ class SoundPlayerActivity : ReactiveActivity<AudioUiModel, SoundPlayerEvent>() {
         outputStream.onNext(ReadyEvent())
     }
 
+    override fun onStop() {
+        super.onStop()
+        outputStream.onNext(DestroyEvent())
+    }
+
     override val successHandler = { model: AudioUiModel ->
         model.fileList?.let {
             if (it != binding.model?.fileList)
