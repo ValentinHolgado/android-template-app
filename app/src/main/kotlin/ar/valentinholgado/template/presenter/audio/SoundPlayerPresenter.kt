@@ -55,6 +55,26 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
         }
     }
 
+    private val accumulator = { state: AudioUiModel, result: Result ->
+        // Timber.d(result.toString() + state.toString())
+        when (result) {
+            is AudioResult -> {
+                handleAudioResult(result, state)
+            }
+            is FilesResult -> {
+                state.copy(fileList = updateSelectedInList(result.copy().fileList.map { file ->
+                    AudioFileContent(file.absolutePath, file.name)
+                }, state.selectedFilePath))
+            }
+            else -> state
+        }
+    }
+
+    private val resultsToContentMapper = { results: Observable<Result> ->
+        // TODO Remove mocked id
+        results.scan(AudioUiModel(AudioContent(audioId = "mock id")), accumulator)
+    }
+
     init {
         // Connect to the audio engine.
         val viewEventStream = audioView.outputStream()
@@ -68,99 +88,76 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
 
         viewEventStream.subscribe(audioRepository.inputStream())
 
-        val accumulator = { state: AudioUiModel, result: Result ->
-            // Timber.d(result.toString() + state.toString())
-            when (result) {
-                is AudioResult -> {
-                    handleAudioResult(result, state)
-                }
-                is FilesResult -> {
-                    state.copy(fileList = updateSelectedInList(result.copy().fileList.map { file ->
-                        AudioFileContent(file.absolutePath, file.name)
-                    }, state.selectedFilePath))
-                }
-                else -> state
-            }
-        }
-
-        val resultsToContent = { results: Observable<Result> ->
-            // TODO Remove mocked id
-            results.scan(AudioUiModel(AudioContent(audioId = "mock id")), accumulator)
-        }
-
         // Merge streams
         filesRepository.outputStream()
                 .mergeWith(audioRepository.outputStream())
                 .doOnSubscribe { disposable -> subscription = disposable }
-                .compose(resultsToContent)
+                .compose(resultsToContentMapper)
                 .subscribe(audioView.inputStream())
     }
 
-    companion object {
+    private fun handleAudioResult(result: AudioResult, state: AudioUiModel): AudioUiModel {
+        return when (result.status) {
 
-        private fun handleAudioResult(result: AudioResult, state: AudioUiModel): AudioUiModel {
-            return when (result.status) {
+            Result.Status.SUCCESS -> state.copy(
+                    isPlaying = true,
+                    isRecording = false,
+                    selectedFilePath = result.filepath,
+                    fileList = updateSelectedInList(state.fileList, result.filepath),
+                    // TODO Remove mocked ids
+                    content = AudioContent(
+                            audioId = "mocked id",
+                            title = result.title))
 
-                Result.Status.SUCCESS -> state.copy(
-                        isPlaying = true,
-                        isRecording = false,
-                        selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state.fileList, result.filepath),
-                        // TODO Remove mocked ids
-                        content = AudioContent(
-                                audioId = "mocked id",
-                                title = result.title))
+            Result.Status.PLAYING -> state.copy(
+                    isPlaying = true,
+                    isRecording = false,
+                    selectedFilePath = result.filepath,
+                    fileList = updateSelectedInList(state.fileList, result.filepath),
+                    content = state.content.copy(
+                            title = result.title))
 
-                Result.Status.PLAYING -> state.copy(
-                        isPlaying = true,
-                        isRecording = false,
-                        selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state.fileList, result.filepath),
-                        content = state.content.copy(
-                                title = result.title))
+            Result.Status.RECORDING -> state.copy(
+                    isPlaying = true,
+                    isRecording = true,
+                    selectedFilePath = result.filepath,
+                    fileList = updateSelectedInList(state.fileList, result.filepath),
+                    content = state.content.copy(
+                            title = result.title))
 
-                Result.Status.RECORDING -> state.copy(
-                        isPlaying = true,
-                        isRecording = true,
-                        selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state.fileList, result.filepath),
-                        content = state.content.copy(
-                                title = result.title))
+            Result.Status.RESUMING -> state.copy(
+                    isPlaying = true,
+                    selectedFilePath = result.filepath,
+                    fileList = updateSelectedInList(state.fileList, result.filepath))
 
-                Result.Status.RESUMING -> state.copy(
-                        isPlaying = true,
-                        selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state.fileList, result.filepath))
+            Result.Status.ON_PAUSE -> state.copy(
+                    isPlaying = false,
+                    isRecording = false,
+                    selectedFilePath = result.filepath,
+                    fileList = updateSelectedInList(state.fileList, result.filepath),
+                    content = state.content.copy(
+                            title = result.title))
 
-                Result.Status.ON_PAUSE -> state.copy(
-                        isPlaying = false,
-                        isRecording = false,
-                        selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state.fileList, result.filepath),
-                        content = state.content.copy(
-                                title = result.title))
+            Result.Status.FINISHED -> state.copy(
+                    isPlaying = false,
+                    isRecording = false,
+                    selectedFilePath = result.filepath,
+                    fileList = updateSelectedInList(state.fileList, result.filepath),
+                    content = state.content.copy(
+                            title = result.title))
 
-                Result.Status.FINISHED -> state.copy(
-                        isPlaying = false,
-                        isRecording = false,
-                        selectedFilePath = result.filepath,
-                        fileList = updateSelectedInList(state.fileList, result.filepath),
-                        content = state.content.copy(
-                                title = result.title))
+            Result.Status.STOPPED -> state.copy(isPlaying = false, isRecording = false)
 
-                Result.Status.STOPPED -> state.copy(isPlaying = false, isRecording = false)
-
-                else -> state
-            }
+            else -> state
         }
+    }
 
-        private fun updateSelectedInList(list: List<AudioFileContent>?, path: String?): List<AudioFileContent>? {
-            return list?.map { file ->
-                if (file.path == path) {
-                    file.copy(selected = true)
-                } else {
-                    file.copy(selected = false)
-                }
+    private fun updateSelectedInList(list: List<AudioFileContent>?, path: String?): List<AudioFileContent>? {
+        return list?.map { file ->
+            if (file.path == path) {
+                file.copy(selected = true)
+            } else {
+                file.copy(selected = false)
             }
         }
     }
