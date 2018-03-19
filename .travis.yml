@@ -1,0 +1,27 @@
+language: android
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - tools
+    - build-tools-26.0.0
+    - android-26
+
+licenses:
+    - 'android-sdk-preview-license-52d11cd2'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+
+cache:
+    directories:
+        - $HOME/.gradle/caches/$GRADLE_VERSION
+        - $HOME/.gradle/caches/jars-1
+        - $HOME/.gradle/wrapper
+        - $HOME/.gradle/native
+
+        - $HOME/.m2/repository/com/squareup
+        - $HOME/.m2/repository/com/facebook
+
+before_cache:
+    - rm -rf $HOME/.gradle/daemon/

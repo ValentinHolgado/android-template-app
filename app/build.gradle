@@ -66,11 +66,6 @@ dokka {
 kapt {
     generateStubs = true
 }
-
-unMock {
-    keep "android.net.Uri"
-    keepStartingWith "libcore."
-}
  
 dependencies {
 
@@ -165,3 +160,5 @@ dependencies {
         exclude group:'com.android.support', module:'support-annotations'
     })
 }
+
+build.dependsOn tasks.getByName("unMock")
