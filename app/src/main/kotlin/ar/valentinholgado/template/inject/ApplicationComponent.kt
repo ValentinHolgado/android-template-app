@@ -10,6 +10,8 @@ import javax.inject.Named
 @Component(modules = arrayOf(
         ApplicationModule::class,
         NetworkModule::class,
+        AudioBackendModule::class,
+        FilesBackendModule::class,
         AndroidSupportInjectionModule::class,
         ActivityBindingModule::class))
 @ApplicationScope

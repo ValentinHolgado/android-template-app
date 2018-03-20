@@ -1,6 +1,7 @@
 package ar.valentinholgado.template.inject;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -25,5 +26,10 @@ abstract class ApplicationModule {
     static Cache provideOkHttpCache(Application application) {
         final int cacheSize = 10 * 1024 * 1024; // 10 MiB
         return new Cache(application.getCacheDir(), cacheSize);
+    }
+
+    @Provides
+    static Context context(Application application) {
+        return application;
     }
 }

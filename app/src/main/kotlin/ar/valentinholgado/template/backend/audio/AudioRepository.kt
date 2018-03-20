@@ -1,6 +1,8 @@
 package ar.valentinholgado.template.backend.audio
 
+import android.content.Context
 import android.media.MediaRecorder
+import android.os.Environment
 import ar.valentinholgado.template.backend.Action
 import ar.valentinholgado.template.backend.BaseRepository
 import ar.valentinholgado.template.backend.Result
@@ -15,7 +17,8 @@ import java.util.concurrent.TimeUnit
 
 
 class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
-                      private val audioRecorder: AudioRecorder) : BaseRepository<Action, Result>() {
+                      private val audioRecorder: AudioRecorder,
+                      private val context: Context) : BaseRepository<Action, Result>() {
 
     private var trackInfo: String? = null
 
@@ -40,8 +43,7 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                         is PauseAction -> {
                             rxAudioPlayer.pause()
                             Observable.just(AudioResult(Result.Status.ON_PAUSE,
-                                    trackInfo,
-                                    trackInfo))
+                                    File(trackInfo).name))
                         }
                         is StopAction -> {
                             rxAudioPlayer.stopPlay()
@@ -55,7 +57,8 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                                     MediaRecorder.AudioEncoder.AAC,
                                     48000,
                                     24,
-                                    File("/storage/emulated/0/Android/data/ar.valentinh.openlibrary/files/Music/${UUID.randomUUID()}.mp4"))
+                                    File(context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).toString()
+                                            + "/${ UUID.randomUUID() }.mp4"))
                             Observable.just(AudioResult(Result.Status.RECORDING))
                         }
                         is StopRecordAction -> {
@@ -102,7 +105,7 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                 .map { _ ->
                     AudioResult(Result.Status.PLAYING,
                             progress = rxAudioPlayer.progress(),
-                            title = File(trackInfo).name ?: "No track information",
+                            title = File(trackInfo).name,
                             filepath = trackInfo)
                 }
                 .takeWhile { _ ->
