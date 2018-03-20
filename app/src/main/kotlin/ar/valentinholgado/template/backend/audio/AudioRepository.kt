@@ -20,7 +20,7 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                       private val audioRecorder: AudioRecorder,
                       private val context: Context) : BaseRepository<Action, Result>() {
 
-    private var trackInfo: String? = null
+    private var lastTrackFilePath: String? = null
 
     init {
         inputStream
@@ -33,21 +33,22 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                 }
                 .flatMap { action ->
                     when (action) {
-                        is PlayAction ->
+                        is PlayAction -> {
                             if (rxAudioPlayer.progress() > 0
-                                    && action.filename == trackInfo) {
+                                    && action.filename == lastTrackFilePath) {
                                 resumePlaying()
                             } else {
                                 startPlaying(action)
                             }
+                        }
                         is PauseAction -> {
                             rxAudioPlayer.pause()
                             Observable.just(AudioResult(Result.Status.ON_PAUSE,
-                                    File(trackInfo).name))
+                                    File(lastTrackFilePath).name))
                         }
                         is StopAction -> {
                             rxAudioPlayer.stopPlay()
-                            trackInfo = null
+                            lastTrackFilePath = null
                             Observable.just(AudioResult(Result.Status.STOPPED))
                         }
                         is StartRecordAction -> {
@@ -58,7 +59,7 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                                     48000,
                                     24,
                                     File(context.getExternalFilesDir(Environment.DIRECTORY_MUSIC).toString()
-                                            + "/${ UUID.randomUUID() }.mp4"))
+                                            + "/${UUID.randomUUID()}.mp4"))
                             Observable.just(AudioResult(Result.Status.RECORDING))
                         }
                         is StopRecordAction -> {
@@ -81,7 +82,7 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
     private fun startPlaying(action: PlayAction): Observable<AudioResult>? {
         return rxAudioPlayer.play(PlayConfig.url(action.filename).build())
                 .map { _ ->
-                    trackInfo = action.filename
+                    lastTrackFilePath = action.filename
                     AudioResult(Result.Status.SUCCESS,
                             title = File(action.filename).name,
                             filepath = action.filename)
@@ -105,8 +106,8 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                 .map { _ ->
                     AudioResult(Result.Status.PLAYING,
                             progress = rxAudioPlayer.progress(),
-                            title = File(trackInfo).name,
-                            filepath = trackInfo)
+                            title = File(lastTrackFilePath).name,
+                            filepath = lastTrackFilePath)
                 }
                 .takeWhile { _ ->
                     rxAudioPlayer.mediaPlayer != null
