@@ -33,7 +33,6 @@ class SoundPlayerPresenter constructor(audioView: ReactiveView<AudioUiModel, Sou
 
     private var subscription: Disposable? = null
 
-    // Event to action mapping
     private val eventToActionMapper = { events: Observable<SoundPlayerEvent> ->
         events.map { event ->
             when (event) {

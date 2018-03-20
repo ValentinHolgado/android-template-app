@@ -80,7 +80,7 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                 .map { _ ->
                     trackInfo = action.filename
                     AudioResult(Result.Status.SUCCESS,
-                            title = action.filename,
+                            title = File(action.filename).name,
                             filepath = action.filename)
                 }
                 .mergeWith(ticks())
@@ -90,7 +90,7 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                 }
                 .doOnComplete {
                     outputStream.onNext(AudioResult(Result.Status.FINISHED,
-                            title = action.filename,
+                            title = File(action.filename).name,
                             filepath = action.filename))
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -102,7 +102,7 @@ class AudioRepository(private val rxAudioPlayer: RxAudioPlayer,
                 .map { _ ->
                     AudioResult(Result.Status.PLAYING,
                             progress = rxAudioPlayer.progress(),
-                            title = trackInfo ?: "No track information",
+                            title = File(trackInfo).name ?: "No track information",
                             filepath = trackInfo)
                 }
                 .takeWhile { _ ->
